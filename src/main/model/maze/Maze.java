@@ -1,4 +1,49 @@
 package model.maze;
 
-public class Maze {
+// A square Maze; each cell is a boolean (true and false represent PATH and WALL, respectively). A maze is started at
+// the top left, at position (1, 1) and terminate in the bottom right, at position (size - 2, size - 2); the maze
+// does in fact use zero-based indexing, but all Mazes are surrounded by wall (i.e. the top and bottom rows, and
+// left-most and right-most columns are all WALL). All mazes must be solveable starting at the top left. This means
+// that all mazes have PATH at positions (1, 1) and (size - 2, size - 2), and there is some way to get from the init
+// position to the termination position.
+public class Maze implements ImmutableMaze {
+
+    // these static variables should be used in the stead of magic constants - they represent how a cell of the Maze
+    // should be interpreted.
+    public static final boolean PATH = true;
+    public static final boolean WALL = !PATH;
+
+    // size of the maze
+    private int size;
+    private boolean[][] maze;
+
+
+    // REQUIRES: size must be in range [5, 10]
+    // EFFECTS: set the size of this maze and initialize the maze so that the top/bottom rows and left-most/right-most
+    // columns are WALL
+    public Maze(int size) {
+
+    }
+
+    @Override
+    // EFFECTS: produce the side-length of the maze
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    // REQUIRES: i and j must be in the range [0, size - 1]
+    // EFFECTS: produce the value of the cell with given indices in the maze
+    public boolean getCell(int i, int j) {
+        return false;
+    }
+
+    // REQUIRES: i and j must be in the range [1, size - 2] (so the surrounding walls cannot be edited) and positions
+    // (1, 1) and (size - 2, size - 2) can only be set to PATH
+    // MODIFIES: this
+    // EFFECTS: set the value of the cell with given indices in the maze
+    public void setCell(int i, int j, boolean value) {
+
+    }
+
 }
