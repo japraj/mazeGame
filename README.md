@@ -17,8 +17,17 @@ spice up the game. The goal is to complete the maze in the shortest possible tim
 - Why is this project of interest to you? when I was first learning to code, I made a very primitive maze game for
  fun. After studying recursive traversal of mazes in CS110, I was inspired to redo this old project from scratch using
  the new skills I have picked up over the past few years. The maze game was *very* simple (just a hardcoded maze that 
- you could walk around in, with a GUI - see below for an image). The scope of this project is larger - I will add a lot of features that I dreamed 
+ you could walk around in, with a GUI - see bottom for an image). The scope of this project is larger - I will add a lot of features that I dreamed 
  about when I made the first game :)
+ 
+ ## User Stories
+ 
+ As a user, I want to be able to...
+ 
+ - generate a random maze of a specified size
+ - see a solution to the current maze
+ - watch an animation showing intermediate steps of an algorithm solving the current maze
+ - add a sequence of moves to my current path (to traverse the maze)
  
  ## Original Maze Game
  
