@@ -13,9 +13,12 @@ public class Maze implements ImmutableMaze {
     public static final boolean PATH = true;
     public static final boolean WALL = false;
 
+    public static final int MAX_SIZE = 14;
+    public static final int MIN_SIZE = 7;
+
     private boolean[][] maze;
 
-    // REQUIRES: size must be in range [5, 10]
+    // REQUIRES: size must be in range [MIN_SIZE, MAX_SIZE]
     // EFFECTS: set the size of this maze and initialize the maze so that the top/bottom rows and left-most/right-most
     // columns are WALL
     public Maze(int size) {

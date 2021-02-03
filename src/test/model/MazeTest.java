@@ -10,8 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MazeTest {
 
     private Maze maze;
-    // SIZE must be >= 4
-    private static final int SIZE = 4;
+    private static final int SIZE = Maze.MIN_SIZE;
 
     @BeforeEach
     public void setup() {
@@ -23,13 +22,10 @@ public class MazeTest {
         // test that the constructor initialized the maze to the correct size and that its surroundings are to WALL
         assertEquals(SIZE, maze.getSize());
 
-        // test left col and top row
+        // test left/rightt col and top/bottom row
         for (int i = 0; i < SIZE; i++) {
             assertEquals(Maze.WALL, maze.getCell(i, 0));
             assertEquals(Maze.WALL, maze.getCell(0, i));
-        }
-        // test right col and bottom row
-        for (int i = 0; i < SIZE; i++) {
             assertEquals(Maze.WALL, maze.getCell(i, SIZE - 1));
             assertEquals(Maze.WALL, maze.getCell(SIZE - 1, i));
         }
