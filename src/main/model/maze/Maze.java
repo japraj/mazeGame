@@ -1,5 +1,7 @@
 package model.maze;
 
+import model.path.Position;
+
 // A square Maze; each cell is a boolean (true and false represent PATH and WALL, respectively). A maze is started at
 // the top left, at position (1, 1) and terminate in the bottom right, at position (size - 2, size - 2); the maze
 // does in fact use zero-based indexing, but all Mazes are surrounded by wall (i.e. the top and bottom rows, and
@@ -39,6 +41,13 @@ public class Maze implements ImmutableMaze {
     @Override
     public boolean getCell(int x, int y) {
         return maze[y][x];
+    }
+
+    // REQUIRES: posX and posY must be in the range [0, size - 1]
+    // EFFECTS: produce the value of the cell with given position in the maze
+    @Override
+    public boolean getCell(Position pos) {
+        return maze[pos.getPosY()][pos.getPosX()];
     }
 
     // REQUIRES: i and j must be in the range [1, size - 2] (so the surrounding walls cannot be edited) and positions

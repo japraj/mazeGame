@@ -19,10 +19,26 @@ public class PathNode extends Position {
         this.direction = direction;
     }
 
+    // REQUIRES: posX and posY must be non-negative and less than size, where size is the side-length of the maze that
+    //           this PathNode is associated with, and Move must be the direction that was used to get to here from
+    //           the previous node in the path (null val for path head)
+    // EFFECTS: create a node with specified direction and coordinates
+    public PathNode(Position pos, @Nullable Move direction) {
+        super(pos.getPosX(), pos.getPosY());
+        this.direction = direction;
+    }
+
     // EFFECTS: produce the direction that was used to get to this node from the previous node; null value denotes
     //          head of path
     public Move getDirection() {
         return direction;
+    }
+
+
+    @Override
+    // EFFECTS: increment/decrement posX or posY depending on move (produces a new PathNode - does not modify this)
+    public PathNode applyMove(Move direction) {
+        return new PathNode(super.applyMove(direction), direction);
     }
 
 }

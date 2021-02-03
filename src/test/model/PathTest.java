@@ -2,8 +2,11 @@ package model;
 
 import model.moveable.Move;
 import model.path.Path;
+import model.path.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +27,7 @@ public class PathTest {
     }
 
     @Test
-    public void testAddNode() {
+    public void testAddNodePosition() {
         path.addNode(1, 2);
         path.addNode(2, 2);
         path.addNode(2, 1);
@@ -53,15 +56,44 @@ public class PathTest {
     }
 
     @Test
-    public void testTail() {
+    public void testAddNodeMove() {
+        // populate path
+        path.addNode(Move.RIGHT);
+        path.addNode(Move.DOWN);
+        path.addNode(Move.LEFT);
+        path.addNode(Move.UP);
+
+        path.next();
+        assertEquals(2, path.getPosition().getPosX());
+        assertEquals(1, path.getPosition().getPosY());
+        assertEquals(Move.RIGHT, path.getDirection());
+
+        path.next();
+        assertEquals(2, path.getPosition().getPosX());
+        assertEquals(2, path.getPosition().getPosY());
+        assertEquals(Move.DOWN, path.getDirection());
+
+        path.next();
+        assertEquals(1, path.getPosition().getPosX());
+        assertEquals(2, path.getPosition().getPosY());
+        assertEquals(Move.LEFT, path.getDirection());
+
+        path.next();
+        assertEquals(1, path.getPosition().getPosX());
+        assertEquals(1, path.getPosition().getPosY());
+        assertEquals(Move.UP, path.getDirection());
+    }
+
+    @Test
+    public void testTailPop() {
         // populate path
         path.addNode(1, 2);
         path.addNode(1, 3);
         path.addNode(2, 3);
 
         // check tail
-        assertEquals(2, path.getTail().getPosX());
         assertEquals(3, path.getTail().getPosY());
+        assertEquals(2, path.getTail().getPosX());
 
         // move index
         assertTrue(path.next());
@@ -75,6 +107,17 @@ public class PathTest {
         path.addNode(2, 4);
         assertEquals(2, path.getTail().getPosX());
         assertEquals(4, path.getTail().getPosY());
+
+        // test single pop
+        path.pop(1);
+        // check tail
+        assertEquals(3, path.getTail().getPosY());
+        assertEquals(2, path.getTail().getPosX());
+
+        // test multiple pop
+        path.pop(3);
+        assertEquals(1, path.getTail().getPosY());
+        assertEquals(1, path.getTail().getPosX());
     }
 
     @Test
@@ -139,6 +182,27 @@ public class PathTest {
     }
 
     @Test
+    public void testVisitedContains() {
+        // correct init
+        assertTrue(path.containsNode(new Position(1, 1)));
+        assertTrue(path.visitedNode(new Position(1, 1)));
+
+        // add node
+        path.addNode(Move.RIGHT);
+        assertTrue(path.containsNode(new Position(2, 1)));
+        assertTrue(path.visitedNode(new Position(2, 1)));
+
+        // remove node
+        path.pop(1);
+        assertFalse(path.containsNode(new Position(2, 1)));
+        assertTrue(path.visitedNode(new Position(2, 1)));
+
+        // test unseen node
+        assertFalse(path.containsNode(new Position(3, 5)));
+        assertFalse(path.visitedNode(new Position(3, 5)));
+    }
+
+    @Test
     public void testEqualsFalse() {
         Path comparePath = new Path();
         for (int i = 2; i < 10; i++) {
@@ -152,6 +216,34 @@ public class PathTest {
 
         assertFalse(path.equals(comparePath));
         assertFalse(comparePath.equals(path));
+    }
 
+    @Test
+    public void testBranching() {
+        path.addNode(3, 4);
+        path.generateBranches(Arrays.asList(Move.UP, Move.DOWN, Move.LEFT, Move.RIGHT));
+        path.nextBranch();
+        path.generateBranches(Arrays.asList(Move.UP, Move.DOWN, Move.LEFT, Move.RIGHT));
+        path.nextBranch();
+        assertEquals(3, path.getTail().getPosX());
+        assertEquals(2, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(3, path.getTail().getPosX());
+        assertEquals(4, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(2, path.getTail().getPosX());
+        assertEquals(3, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(4, path.getTail().getPosX());
+        assertEquals(3, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(3, path.getTail().getPosX());
+        assertEquals(5, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(2, path.getTail().getPosX());
+        assertEquals(4, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(4, path.getTail().getPosX());
+        assertEquals(4, path.getTail().getPosY());
     }
 }

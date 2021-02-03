@@ -1,11 +1,11 @@
-package model;
+package model.solvers;
 
-import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.path.Path;
 import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ui.output.Printer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,18 +53,14 @@ public abstract class MazeSolverTest {
             solution.addNode(x, Maze.MIN_SIZE - 2);
         }
 
+        Printer.printMaze(maze);
+
         Path initPath = new Path();
-        initPath.addNode(2, 1);
-        initPath.addNode(3, 1);
-        initPath.addNode(4, 1);
+        initPath.addNode(1, 2);
+        initPath.addNode(1, 3);
         init(initPath);
 
-        // tick the solver to completion - if it takes more than 50 ticks, it is in an infinite loop (maze is trivial)
-        int ticks = 0;
-        while (!solver.isSolved() && ticks < 50) {
-            solver.tick();
-            ticks++;
-        }
+        tickSolver(50);
         assertTrue(solution.equals(solver.getPath()));
     }
 
@@ -107,27 +103,15 @@ public abstract class MazeSolverTest {
         maze.setCell(blockCoord, Maze.MIN_SIZE - 2, Maze.WALL);
 
         init();
-
-        // tick the solver to completion - if it takes more than 150 ticks, it is in an infinite loop (maze is trivial)
-        int ticks = 0;
-        while (!solver.isSolved() && ticks < 150) {
-            solver.tick();
-            ticks++;
-        }
+        tickSolver(150);
         assertTrue(solutionUpper.equals(solver.getPath()));
 
         // reset solver, block the upper path, and unblock the lower path, so the lower path is the only valid solution
         init();
         maze.setCell(blockCoord, Maze.MIN_SIZE - 2, Maze.PATH);
         maze.setCell(Maze.MIN_SIZE - 2, blockCoord, Maze.WALL);
-
-        // tick the solver to completion - if it takes more than 150 ticks, it is in an infinite loop (maze is trivial)
-        ticks = 0;
-        while (!solver.isSolved() && ticks < 150) {
-            solver.tick();
-            ticks++;
-        }
-        assertTrue(solutionUpper.equals(solver.getPath()));
+        tickSolver(150);
+        assertTrue(solutionLower.equals(solver.getPath()));
     }
 
     @Test
@@ -159,19 +143,23 @@ public abstract class MazeSolverTest {
         maze.setCell(4, 4, Maze.WALL);
 
         // tick the solver to completion - if it takes more than 150 ticks, it is in an infinite loop
+        init();
+        tickSolver(150);
+        // all solutions to this maze are 9 nodes long (due to the symmetry); there are 4 solutions so we simply check
+        // path length - if all other tests are passed, then this one will not have an invalid solution
+        assertEquals(9, solver.getPath().getLength());
+    }
+
+    protected void tickSolver(int n) {
         int ticks = 0;
-        while (!solver.isSolved() && ticks < 150) {
+        while (!solver.isSolved() && ticks < n) {
             solver.tick();
             ticks++;
         }
-
-        // if it is 149 ticks, the solver failed (should not even need 100)
-        if (ticks == 149) {
+        // if it is n ticks, the solver is in a loop
+        if (ticks == n) {
             fail();
         }
-        // all solutions to this maze are 9 nodes long (due to the symmetry); there are 4 solutions so we simply check
-        // path length - if all other tests are passed, then this one will not have an invalid solution
-        assertEquals(9, solver.getPath().length());
     }
 
 }

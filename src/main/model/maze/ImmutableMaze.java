@@ -1,5 +1,7 @@
 package model.maze;
 
+import model.path.Position;
+
 // A square, read-only maze; see class-level comment of Maze for a detailed description
 public interface ImmutableMaze {
 
@@ -10,4 +12,7 @@ public interface ImmutableMaze {
     // EFFECTS: produce the value of the cell with given indices in the maze
     boolean getCell(int x, int y);
 
+    // REQUIRES: posX and posY must be in the range [0, size - 1]
+    // EFFECTS: produce the value of the cell with given position in the maze
+    boolean getCell(Position pos);
 }

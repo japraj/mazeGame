@@ -24,10 +24,10 @@ spice up the game. The goal is to complete the maze in the shortest possible tim
  
  As a user, I want to be able to...
  
- - generate a random maze of a specified size
- - see a solution to the current maze
- - watch an animation showing intermediate steps of an algorithm solving the current maze
- - add a sequence of moves to my current path (to traverse the maze)
+ - use MazeGenerator to produce a random Maze of the specified size
+ - use an implementation of MazeSolver to see the Path from my current Position to the end of the Maze
+ - use Printer to watch an animation of intermediate Paths produced by a MazeSolver
+ - add a sequence of Moves to my current Path to traverse the Maze
  
  ## Original Maze Game
  

@@ -62,7 +62,7 @@ public class MazeGeneratorTest {
             maze = MazeGenerator.generateMaze((Maze.MIN_SIZE + Maze.MAX_SIZE) / 2); // arbitrary size choice
             solver = new FirstPath(maze, new Path());
             ticks = 0;
-            while (!solver.isSolved() && ticks <= MAX_TICKS) {
+            while (!solver.isSolved() && ticks < MAX_TICKS) {
                 solver.tick();
                 ticks++;
             }
