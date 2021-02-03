@@ -4,8 +4,7 @@ package model.maze;
 // the top left, at position (1, 1) and terminate in the bottom right, at position (size - 2, size - 2); the maze
 // does in fact use zero-based indexing, but all Mazes are surrounded by wall (i.e. the top and bottom rows, and
 // left-most and right-most columns are all WALL). All mazes must be solveable starting at the top left. This means
-// that all mazes have PATH at positions (1, 1) and (size - 2, size - 2), and there is some way to get from the init
-// position to the termination position.
+// that all mazes have PATH at positions (1, 1) and (size - 2, size - 2), and there is some way to move between them.
 public class Maze implements ImmutableMaze {
 
     // these static variables should be used in the stead of magic constants - they represent how a cell of the Maze
@@ -16,6 +15,8 @@ public class Maze implements ImmutableMaze {
     public static final int MAX_SIZE = 14;
     public static final int MIN_SIZE = 7;
 
+    // this class provides an abstraction on top of this 2-dimensional array - all methods use x, y notation instead of
+    // the i, j notation associated with matrices; y determines row while x determines column, so x, y means maze[y][x]
     private boolean[][] maze;
 
     // REQUIRES: size must be in range [MIN_SIZE, MAX_SIZE]
@@ -33,19 +34,19 @@ public class Maze implements ImmutableMaze {
         return maze.length;
     }
 
-    // REQUIRES: i and j must be in the range [0, size - 1]
+    // REQUIRES: x and y must be in the range [0, size - 1]
     // EFFECTS: produce the value of the cell with given indices in the maze
     @Override
-    public boolean getCell(int i, int j) {
-        return maze[i][j];
+    public boolean getCell(int x, int y) {
+        return maze[y][x];
     }
 
     // REQUIRES: i and j must be in the range [1, size - 2] (so the surrounding walls cannot be edited) and positions
     // (1, 1) and (size - 2, size - 2) can only be set to PATH
     // MODIFIES: this
     // EFFECTS: set the value of the cell with given indices in the maze
-    public void setCell(int i, int j, boolean value) {
-        maze[i][j] = value;
+    public void setCell(int x, int y, boolean value) {
+        maze[y][x] = value;
     }
 
 }

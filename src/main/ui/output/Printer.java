@@ -1,6 +1,7 @@
 package ui.output;
 
 import model.maze.ImmutableMaze;
+import model.maze.Maze;
 import model.path.Path;
 import model.path.Position;
 
@@ -36,6 +37,16 @@ public class Printer {
     // for the player
     public void printPlayerMaze(Position player) {
 
+    }
+
+    // EFFECTS: prints the given maze using '*' for WALL and ' ' for PATH
+    public static void printMaze(ImmutableMaze maze) {
+        for (int y = 0; y < maze.getSize(); y++) {
+            for (int x = 0; x < maze.getSize(); x++) {
+                System.out.print(maze.getCell(x, y) == Maze.PATH ? " " : "*");
+            }
+            System.out.print('\n');
+        }
     }
 
 }

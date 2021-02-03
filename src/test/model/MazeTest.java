@@ -1,6 +1,5 @@
 package model;
 
-import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

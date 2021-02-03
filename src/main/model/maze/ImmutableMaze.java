@@ -6,8 +6,8 @@ public interface ImmutableMaze {
     // EFFECTS: produce the side-length of the maze
     int getSize();
 
-    // REQUIRES: i and j must be in the range [0, size - 1]
+    // REQUIRES: x and y must be in the range [0, size - 1]
     // EFFECTS: produce the value of the cell with given indices in the maze
-    boolean getCell(int i, int j);
+    boolean getCell(int x, int y);
 
 }
