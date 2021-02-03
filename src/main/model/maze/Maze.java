@@ -9,33 +9,32 @@ package model.maze;
 public class Maze implements ImmutableMaze {
 
     // these static variables should be used in the stead of magic constants - they represent how a cell of the Maze
-    // should be interpreted.
+    // should be interpreted. See constructor implementation for reasoning behind these choices
     public static final boolean PATH = true;
-    public static final boolean WALL = !PATH;
+    public static final boolean WALL = false;
 
-    // size of the maze
-    private int size;
     private boolean[][] maze;
-
 
     // REQUIRES: size must be in range [5, 10]
     // EFFECTS: set the size of this maze and initialize the maze so that the top/bottom rows and left-most/right-most
     // columns are WALL
     public Maze(int size) {
-
+        maze = new boolean[size][size];
+        // boolean arrays are initialized to false, so the second part of the effects clause is automatically satisfied
+        // given that WALL == false
     }
 
-    @Override
     // EFFECTS: produce the side-length of the maze
+    @Override
     public int getSize() {
-        return size;
+        return maze.length;
     }
 
-    @Override
     // REQUIRES: i and j must be in the range [0, size - 1]
     // EFFECTS: produce the value of the cell with given indices in the maze
+    @Override
     public boolean getCell(int i, int j) {
-        return false;
+        return maze[i][j];
     }
 
     // REQUIRES: i and j must be in the range [1, size - 2] (so the surrounding walls cannot be edited) and positions
@@ -43,7 +42,7 @@ public class Maze implements ImmutableMaze {
     // MODIFIES: this
     // EFFECTS: set the value of the cell with given indices in the maze
     public void setCell(int i, int j, boolean value) {
-
+        maze[i][j] = value;
     }
 
 }
