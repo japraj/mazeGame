@@ -1,6 +1,5 @@
 package model.path;
 
-import com.sun.istack.internal.Nullable;
 import model.moveable.Move;
 
 // A Position in a Path that keeps track of how this position was obtained from the previous node in the Path
@@ -14,7 +13,7 @@ public class PathNode extends Position {
     //           PathNode is associated with, and Move must be the direction that was used to get to here from
     //           the previous node in the path (null val for path head)
     // EFFECTS: create a position with x, y and direction
-    public PathNode(int posX, int posY, @Nullable Move direction) {
+    public PathNode(int posX, int posY, Move direction) {
         super(posX, posY);
         this.direction = direction;
     }
@@ -23,7 +22,7 @@ public class PathNode extends Position {
     //           this PathNode is associated with, and Move must be the direction that was used to get to here from
     //           the previous node in the path (null val for path head)
     // EFFECTS: create a node with specified direction and coordinates
-    public PathNode(Position pos, @Nullable Move direction) {
+    public PathNode(Position pos, Move direction) {
         super(pos.getPosX(), pos.getPosY());
         this.direction = direction;
     }
