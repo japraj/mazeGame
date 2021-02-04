@@ -22,7 +22,7 @@ public class Printer {
     // EFFECTS: print welcome message
     public void printWelcome() {
         System.out.println("Welcome to the Maze Simulator! Your character is represented by an 'X' character. Your"
-                + " goal is to get to the bottom right corner of the maze.");
+                + " goal is to get to the bottom right corner of the maze (denoted with a 'O' character).");
     }
 
     // EFFECTS: print help message
@@ -76,7 +76,7 @@ public class Printer {
         if (path.containsNode(x, y)) {
             PathNode node = path.getNode(x, y);
             if (path.getTail().equals(node)) {
-                System.out.print("x");
+                System.out.print("X");
             } else if (x == 1 && y == 1) {
                 path.next();
                 printMove(path.getDirection());
@@ -84,7 +84,7 @@ public class Printer {
                 printMove(node.getDirection());
             }
         } else {
-            System.out.print(" ");
+            System.out.print((x == maze.getSize() - 2 && y == maze.getSize() - 2) ? "O" : " ");
         }
     }
 
@@ -115,6 +115,8 @@ public class Printer {
             for (int x = 0; x < maze.getSize(); x++) {
                 if (playerPos.equals(x, y)) {
                     System.out.print('x');
+                } else if (x == maze.getSize() - 2 && y == maze.getSize() - 2) {
+                    System.out.print("O");
                 } else {
                     System.out.print(maze.getCell(x, y) == Maze.PATH ? " " : "*");
                 }
