@@ -60,7 +60,7 @@ public class MazeGeneratorTest {
         int ticks;
         int size = (Maze.MIN_SIZE + Maze.MAX_SIZE) / 2;
         // make sure it is odd
-        if (size % 2 == 1) {
+        if (size % 2 == 0) {
             size--;
         }
         // large number to make sure it is given ample chance to solve - if the solver and maze generator both work
