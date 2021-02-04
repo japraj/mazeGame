@@ -6,17 +6,20 @@ import model.maze.Maze;
 import model.path.Path;
 import model.solver.FirstPath;
 import model.solver.MazeSolver;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MazeGeneratorTest {
 
+    private MazeGenerator mazeGenerator;
     private ImmutableMaze maze;
 
-    // no BeforeEach because the ref is immutable, meaning we do not need to re-initialize it every time
+    @BeforeEach
     public void setup() {
-        maze = MazeGenerator.generateMaze(Maze.MIN_SIZE);
+        mazeGenerator = new MazeGenerator(Maze.MIN_SIZE % 2 == 1 ? Maze.MIN_SIZE : Maze.MIN_SIZE + 1);
+        maze = mazeGenerator.generateMaze();
     }
 
     @Test
@@ -52,14 +55,19 @@ public class MazeGeneratorTest {
 
     @Test
     public void testSolveable() {
-        // test 10 times to make sure the generator doesn't just get lucky!
+        // test 50 times to make sure the generator doesn't just get lucky!
         MazeSolver solver;
         int ticks;
+        int size = (Maze.MIN_SIZE + Maze.MAX_SIZE) / 2;
+        // make sure it is odd
+        if (size % 2 == 1) {
+            size--;
+        }
         // large number to make sure it is given ample chance to solve - if the solver and maze generator both work
         // properly, the test's execution time will be much shorter
         final int MAX_TICKS = 2000;
-        for (int i = 0; i < 10; i++) {
-            maze = MazeGenerator.generateMaze((Maze.MIN_SIZE + Maze.MAX_SIZE) / 2); // arbitrary size choice
+        for (int i = 0; i < 50; i++) {
+            maze = mazeGenerator.generateMaze(size);
             solver = new FirstPath(maze, new Path());
             ticks = 0;
             while (!solver.isSolved() && ticks < MAX_TICKS) {

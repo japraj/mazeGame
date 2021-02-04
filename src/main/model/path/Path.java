@@ -13,8 +13,9 @@ public class Path {
     private int index;
     private LinkedList<List<Move>> branches; // declare as LinkedList so we can access subclass methods
     private List<Move> currentBranch;
+    private boolean noDuplicatesNodes;
 
-    // EFFECTS: start the Path with the Position (1,1) and set that as current node
+    // EFFECTS: start the Path with the Position (1,1) and set that as current node; allows dupes
     public Path() {
         path = new ArrayList<>();
         tail = new PathNode(1, 1, null);
@@ -24,6 +25,14 @@ public class Path {
         index = 0;
         branches = new LinkedList<>();
         currentBranch = new ArrayList<>();
+        noDuplicatesNodes = false;
+    }
+
+    // EFFECTS: start the Path with the Position (1,1) and set that as current node, and use given flag to determine
+    //          whether dupes are allowed
+    public Path(boolean noDuplicateNodes) {
+        this();
+        this.noDuplicatesNodes = noDuplicateNodes;
     }
 
     // REQUIRES: posX and posY must be within bounds of Maze that this Path is associated with, the value of the cell
@@ -31,10 +40,10 @@ public class Path {
     //           previous cell in the path
     // MODIFIES: this
     // EFFECTS: add a node with given coordinates to the end of the path, dynamically determining direction attribute
-    //          for the node and keeps track that we have seen this position. If given node is already in cell,
-    //          do nothing
+    //          for the node and keeps track that we have seen this position. If given node is already in cell and this
+    //          was initialized to allow no dupes, do nothing
     public void addNode(int posX, int posY) {
-        if (containsNode(new Position(posX, posY))) {
+        if (noDuplicatesNodes && containsNode(new Position(posX, posY))) {
             return;
         }
         if (tail.getPosX() == posX) {
@@ -50,9 +59,10 @@ public class Path {
     //           Maze that this Path is associated with, and the corresponding cell in the associated Maze must be PATH
     // MODIFIES: this
     // EFFECTS: add the node obtained by moving from tail node in specified direction to end of path and keeps track
-    //          that we have seen this position. If given node is already in cell, do nothing
+    //          that we have seen this position.  If given node is already in cell and this was initialized to allow no
+    //          dupes, do nothing
     public void addNode(Move direction) {
-        if (containsNode(tail.applyMove(direction))) {
+        if (noDuplicatesNodes && containsNode(tail.applyMove(direction))) {
             return;
         }
         tail = tail.applyMove(direction);
@@ -60,9 +70,20 @@ public class Path {
         visited.add(tail);
     }
 
+    // REQUIRES: containsNode(x, y) should produce true
+    // EFFECTS: produce node with specified coordinates
+    public PathNode getNode(int x, int y) {
+        return path.stream().filter(n -> n.equals(x, y)).toArray(PathNode[]::new)[0];
+    }
+
     // EFFECTS: produce true if this node is in current path
     public boolean containsNode(Position pos) {
         return path.contains(pos);
+    }
+
+    // EFFECTS: produce true if this node is in current path
+    public boolean containsNode(int x, int y) {
+        return containsNode(new Position(x, y));
     }
 
     // EFFECTS: produce true if this node has been seen in this path before (even if it is not present in the current
@@ -128,9 +149,17 @@ public class Path {
         }
     }
 
-    // EFFECTS: produces true if all nodes in this are present in given path, in same order
-    public boolean equals(Path path) {
+
+    // EFFECTS: produces true if object is a Path and all nodes in this are present in given path, in same order
+    @Override
+    public boolean equals(Object o) {
+        // if o is not of type Path, these objects are not equal
+        if (!(o instanceof Path)) {
+            return false;
+        }
+
         // guard clause - if they are of different lengths or end in different places, then they cannot be equal
+        Path path = (Path) o;
         if (this.getLength() != path.getLength() || !tail.equals(path.getTail())) {
             return false;
         }

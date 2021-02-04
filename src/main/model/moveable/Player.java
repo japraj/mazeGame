@@ -12,12 +12,21 @@ public class Player extends MoveableEntity {
     // EFFECTS: initialize the player at position (1,1)
     public Player(ImmutableMaze maze) {
         super(maze, new Position(1, 1));
+        path = new Path();
     }
 
     // MODIFIES: this
     // EFFECTS: if moving in specified manner does not run into a wall, apply the move AND add it to current path
     @Override
     public void tryMove(Move move) {
-        super.tryMove(move);
+        if (isValid(move)) {
+            position = position.applyMove(move);
+            path.addNode(move);
+        }
+    }
+
+    // EFFECTS: produce path player has taken so far
+    public Path getPath() {
+        return path;
     }
 }

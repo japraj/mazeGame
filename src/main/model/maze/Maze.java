@@ -14,14 +14,14 @@ public class Maze implements ImmutableMaze {
     public static final boolean PATH = true;
     public static final boolean WALL = false;
 
-    public static final int MAX_SIZE = 14;
+    public static final int MAX_SIZE = 15;
     public static final int MIN_SIZE = 7;
 
     // this class provides an abstraction on top of this 2-dimensional array - all methods use x, y notation instead of
     // the i, j notation associated with matrices; y determines row while x determines column, so x, y means maze[y][x]
     private boolean[][] maze;
 
-    // REQUIRES: size must be in range [MIN_SIZE, MAX_SIZE]
+    // REQUIRES: size must be odd and in the range [MIN_SIZE, MAX_SIZE]
     // EFFECTS: set the size of this maze and initialize the maze so that the top/bottom rows and left-most/right-most
     // columns are WALL
     public Maze(int size) {
@@ -56,6 +56,15 @@ public class Maze implements ImmutableMaze {
     // EFFECTS: set the value of the cell with given indices in the maze
     public void setCell(int x, int y, boolean value) {
         maze[y][x] = value;
+    }
+
+
+    // REQUIRES: poxX and posY must be in the range [1, size - 2] (so the surrounding walls cannot be edited) and
+    // positions (1, 1) and (size - 2, size - 2) can only be set to PATH
+    // MODIFIES: this
+    // EFFECTS: set the cell with given position to specified value
+    public void setCell(Position pos, boolean value) {
+        maze[pos.getPosY()][pos.getPosX()] = value;
     }
 
 }

@@ -2,7 +2,7 @@ package model.path;
 
 import model.moveable.Move;
 
-// A position with x, y in a maze
+// A position with x, y in a maze; positions are immutable.
 public class Position {
 
     private int posX;
@@ -36,9 +36,8 @@ public class Position {
             case LEFT:
                 return new Position(posX - 1, posY);
             case RIGHT:
-                return new Position(posX + 1, posY);
             default:
-                return new Position(posX, posY);
+                return new Position(posX + 1, posY);
         }
     }
 
@@ -46,6 +45,11 @@ public class Position {
     @Override
     public boolean equals(Object o) {
         return o instanceof Position && this.posX == ((Position) o).getPosX() && this.posY == ((Position) o).getPosY();
+    }
+
+    // EFFECTS: produce true if this has same coordinates as given
+    public boolean equals(int x, int y) {
+        return posX == x && posY == y;
     }
 
     // EFFECTS: produce a unique hashcode for this

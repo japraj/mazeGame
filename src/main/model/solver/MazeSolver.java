@@ -41,6 +41,10 @@ public abstract class MazeSolver {
         return path;
     }
 
+    public void reset() {
+        path = new Path();
+    }
+
     private boolean isValid(Move move) {
         // we don't need to check for index out of bounds because if the maze is generated properly, then it will be
         // surrounded by WALL and therefore the user cannot ever get to a cell such that they are one Move away

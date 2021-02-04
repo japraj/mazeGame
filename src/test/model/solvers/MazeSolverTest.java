@@ -5,7 +5,6 @@ import model.path.Path;
 import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.output.Printer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,7 +42,7 @@ public abstract class MazeSolverTest {
 
         // initialize a maze that has a single solution starting at 1,1 going all the way down, and the going all the
         // way to the right (like an L shape), and build up a solution path for comparison simultaneously
-        Path solution = new Path();
+        Path solution = new Path(true);
         for (int y = 1; y < Maze.MIN_SIZE - 1; y++) {
             maze.setCell(1, y, Maze.PATH);
             solution.addNode(1, y);
@@ -53,15 +52,13 @@ public abstract class MazeSolverTest {
             solution.addNode(x, Maze.MIN_SIZE - 2);
         }
 
-        Printer.printMaze(maze);
-
         Path initPath = new Path();
         initPath.addNode(1, 2);
         initPath.addNode(1, 3);
         init(initPath);
 
         tickSolver(50);
-        assertTrue(solution.equals(solver.getPath()));
+        assertEquals(solution, solver.getPath());
     }
 
     @Test
@@ -78,8 +75,8 @@ public abstract class MazeSolverTest {
         this test uses 2 mazes; both are a variation of the one above - one blocks off the lower path, the other blocks
         off the upper path. most solver implementations will have to use backtracking to solve one of them
          */
-        Path solutionLower = new Path();
-        Path solutionUpper = new Path();
+        Path solutionLower = new Path(true);
+        Path solutionUpper = new Path(true);
 
         // init the maze to look like above, and build the solution paths (need 2 loops so we can sequentially build the
         // Path variables - the maze itself could actually be done with a single loop)
@@ -104,14 +101,14 @@ public abstract class MazeSolverTest {
 
         init();
         tickSolver(150);
-        assertTrue(solutionUpper.equals(solver.getPath()));
+        assertEquals(solutionUpper, solver.getPath());
 
         // reset solver, block the upper path, and unblock the lower path, so the lower path is the only valid solution
-        init();
+        solver.reset();
         maze.setCell(blockCoord, Maze.MIN_SIZE - 2, Maze.PATH);
         maze.setCell(Maze.MIN_SIZE - 2, blockCoord, Maze.WALL);
         tickSolver(150);
-        assertTrue(solutionLower.equals(solver.getPath()));
+        assertEquals(solutionLower, solver.getPath());
     }
 
     @Test

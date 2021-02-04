@@ -2,6 +2,7 @@ package model;
 
 import model.moveable.Move;
 import model.path.Path;
+import model.path.PathNode;
 import model.path.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -177,8 +178,8 @@ public class PathTest {
         path.addNode(3, 8);
         comparePath.addNode(3, 8);
 
-        assertTrue(path.equals(comparePath));
-        assertTrue(comparePath.equals(path));
+        assertEquals(path, comparePath);
+        assertEquals(comparePath, path);
     }
 
     @Test
@@ -214,8 +215,17 @@ public class PathTest {
             comparePath.addNode(9, i);
         }
 
-        assertFalse(path.equals(comparePath));
-        assertFalse(comparePath.equals(path));
+        assertNotEquals(path, comparePath);
+        assertNotEquals(comparePath, path);
+
+        // give them the same tail
+        path.addNode(10, 10);
+        comparePath.addNode(10, 10);
+        // check symmetry of equality
+        assertNotEquals(path, comparePath);
+        assertNotEquals(comparePath, path);
+        // random obj to make sure it fails when given non-path arg
+        assertNotEquals(path, "");
     }
 
     @Test
@@ -245,5 +255,25 @@ public class PathTest {
         path.nextBranch();
         assertEquals(4, path.getTail().getPosX());
         assertEquals(4, path.getTail().getPosY());
+        path.nextBranch();
+    }
+
+    @Test
+    public void testNoDuplicates() {
+        path = new Path(true);
+        // try adding duplicates
+        path.addNode(Move.DOWN);
+        path.addNode(Move.UP);
+        path.addNode(1, 2);
+        // only nodes in the path should be 1,1 and 1,2
+        assertEquals(2, path.getLength());
+    }
+
+    @Test
+    public void testGetNode() {
+        assertTrue(path.containsNode(1, 1));
+        PathNode node = path.getNode(1, 1);
+        assertNull(node.getDirection());
+        assertTrue(node.equals(1, 1));
     }
 }
