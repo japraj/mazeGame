@@ -214,18 +214,37 @@ public class PathTest {
             path.addNode(i, 9);
             comparePath.addNode(9, i);
         }
-
+        // same length, different tails
         assertNotEquals(path, comparePath);
         assertNotEquals(comparePath, path);
 
         // give them the same tail
         path.addNode(10, 10);
         comparePath.addNode(10, 10);
-        // check symmetry of equality
+
+        // check failure due to different x coords - two assertions to ensure symmetry
         assertNotEquals(path, comparePath);
         assertNotEquals(comparePath, path);
-        // random obj to make sure it fails when given non-path arg
+
+        // check different lengths but same tail
+        path.addNode(10, 10);
+        assertNotEquals(path, comparePath);
+
+        // check different lengths different tail
+        path.addNode(Move.DOWN);
+        assertNotEquals(path, comparePath);
+
+        // random obj that is not instanceof path to make sure it fails
         assertNotEquals(path, "");
+
+        // same length, same tail, difference is in y coord
+        path = new Path();
+        comparePath = new Path();
+        path.addNode(3, 4);
+        comparePath.addNode(3, 5);
+        path.addNode(4, 4);
+        comparePath.addNode(4, 4);
+        assertNotEquals(path, comparePath);
     }
 
     @Test

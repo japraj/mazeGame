@@ -58,6 +58,10 @@ public abstract class MazeSolverTest {
         init(initPath);
 
         tickSolver(50);
+        // tick over to make sure it does not keep trying to solve and corrupt the path
+        for (int i = 0; i < 10; i++) {
+            solver.tick();
+        }
         assertEquals(solution, solver.getPath());
     }
 
