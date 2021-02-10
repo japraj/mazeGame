@@ -55,7 +55,7 @@ public class Position {
     // EFFECTS: produce a unique hashcode for this
     @Override
     public int hashCode() {
-        return Integer.parseInt(posX + "" + posY);
+        return Integer.parseInt(posX + "000" + posY);
     }
 
 }
