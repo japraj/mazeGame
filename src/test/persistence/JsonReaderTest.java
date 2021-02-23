@@ -11,14 +11,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JSONReaderTest {
+public class JsonReaderTest {
 
     private static final String DATA = "./data/readTest.json";
 
     @Test
     public void testReadNullFile() {
         try {
-            new JSONReader("./data/data/test.json");
+            new JsonReader("./data/data/test.json");
             fail("IOException expected");
         } catch (IOException e) {
             // pass
@@ -27,7 +27,7 @@ public class JSONReaderTest {
 
     @Test
     public void testReadGeneric() throws IOException {
-        JSONReader jsonReader = new JSONReader(DATA);
+        JsonReader jsonReader = new JsonReader(DATA);
         Maze maze = jsonReader.readMaze();
         Maze mazeCompare = new Maze(7, "0000000010111001010100101010010001001111100000000");
         // verify loading properly; we test the constructor itself in MazeTest

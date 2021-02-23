@@ -10,14 +10,14 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class JSONWriterTest {
+public class JsonWriterTest {
 
     private static final String DATA = "./data/writeTest.json";
 
     @Test
     public void testNullWrite() {
         try {
-            new JSONWriter("./data/data/test.json");
+            new JsonWriter("./data/data/test.json");
             fail("IOException expected");
         } catch (IOException e) {
             // pass
@@ -32,11 +32,11 @@ public class JSONWriterTest {
             player.tryMove(Move.DOWN);
         }
 
-        JSONWriter jsonWriter = new JSONWriter(DATA);
+        JsonWriter jsonWriter = new JsonWriter(DATA);
         jsonWriter.write(maze, player);
         jsonWriter.close();
 
-        JSONReader jsonReader = new JSONReader(DATA);
+        JsonReader jsonReader = new JsonReader(DATA);
 
         Maze readMaze = jsonReader.readMaze();
         assertEquals(7, readMaze.getSize());

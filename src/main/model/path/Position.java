@@ -62,7 +62,7 @@ public class Position implements Saveable {
 
     // EFFECTS: produces a JSON representation of this
     @Override
-    public JSONObject toJSON() {
+    public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("x", posX);
         obj.put("y", posY);

@@ -35,9 +35,9 @@ public abstract class MoveableEntity implements Saveable {
 
     // EFFECTS: produces a JSON representation of this
     @Override
-    public JSONObject toJSON() {
+    public JSONObject toJson() {
         JSONObject obj = new JSONObject();
-        obj.put("pos", position.toJSON());
+        obj.put("pos", position.toJson());
         return obj;
     }
 }

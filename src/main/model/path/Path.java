@@ -220,18 +220,18 @@ public class Path implements Saveable {
 
     // EFFECTS: produces a JSON representation of this
     @Override
-    public JSONObject toJSON() {
+    public JSONObject toJson() {
         JSONObject obj = new JSONObject();
 
         JSONArray arr = new JSONArray();
         for (PathNode p : path) {
-            arr.put(p.toJSON());
+            arr.put(p.toJson());
         }
         obj.put("path", arr);
 
         arr = new JSONArray();
         for (Position p : visited) {
-            arr.put(p.toJSON());
+            arr.put(p.toJson());
         }
         obj.put("visited", arr);
 

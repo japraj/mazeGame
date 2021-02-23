@@ -10,13 +10,13 @@ import java.io.PrintWriter;
 
 // handles writing to a JSON file
 // CITATION: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class JSONWriter {
+public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;
 
     // EFFECTS: opens writer to write to destination file; throws FileNotFoundException if destination file cannot be
     //          opened for writing
-    public JSONWriter(String destination) throws FileNotFoundException {
+    public JsonWriter(String destination) throws FileNotFoundException {
         writer = new PrintWriter(new File(destination));
     }
 
@@ -24,8 +24,8 @@ public class JSONWriter {
     // EFFECTS: writes JSON representation of maze and player to file
     public void write(ImmutableMaze maze, Player player) {
         JSONObject obj = new JSONObject();
-        obj.put("maze", maze.toJSON());
-        obj.put("player", player.toJSON());
+        obj.put("maze", maze.toJson());
+        obj.put("player", player.toJson());
         saveToFile(obj.toString(TAB));
     }
 

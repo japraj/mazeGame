@@ -22,13 +22,13 @@ import java.util.stream.Stream;
 
 // handles reading of objects from a JSON file
 // CITATION: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class JSONReader {
+public class JsonReader {
 
     private JSONObject obj;
 
     // EFFECTS: reads json from specified file; throws IOException if an error
     //          occurs reading data from file
-    public JSONReader(String source) throws IOException {
+    public JsonReader(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
             stream.forEach(contentBuilder::append);

@@ -96,7 +96,7 @@ public class Maze implements ImmutableMaze {
 
     // EFFECTS: produces a JSON representation of this
     @Override
-    public JSONObject toJSON() {
+    public JSONObject toJson() {
         JSONObject obj = new JSONObject();
         obj.put("size", maze.length);
         obj.put("maze", toString());

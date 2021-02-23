@@ -43,8 +43,8 @@ public class PathNode extends Position {
 
     // EFFECTS: produces a JSON representation of this
     @Override
-    public JSONObject toJSON() {
-        JSONObject obj = super.toJSON();
+    public JSONObject toJson() {
+        JSONObject obj = super.toJson();
         obj.put("direction", direction);
         return obj;
     }

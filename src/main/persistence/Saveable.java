@@ -6,5 +6,5 @@ import org.json.JSONObject;
 // CITATION: https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public interface Saveable {
     // EFFECTS: produces a JSON representation of this
-    JSONObject toJSON();
+    JSONObject toJson();
 }

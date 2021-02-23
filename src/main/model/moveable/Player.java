@@ -40,9 +40,9 @@ public class Player extends MoveableEntity implements Saveable {
 
     // EFFECTS: produces a JSON representation of this
     @Override
-    public JSONObject toJSON() {
-        JSONObject obj = super.toJSON();
-        obj.put("path", path.toJSON());
+    public JSONObject toJson() {
+        JSONObject obj = super.toJson();
+        obj.put("path", path.toJson());
         return obj;
     }
 }

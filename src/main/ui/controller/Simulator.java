@@ -8,8 +8,8 @@ import model.moveable.Player;
 import model.path.Path;
 import model.solver.FirstPath;
 import model.solver.MazeSolver;
-import persistence.JSONReader;
-import persistence.JSONWriter;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 import ui.output.Printer;
 
 import java.io.FileNotFoundException;
@@ -52,7 +52,7 @@ public class Simulator {
     private void init() {
         // model
         try {
-            JSONReader jsonReader = new JSONReader(DATA);
+            JsonReader jsonReader = new JsonReader(DATA);
 
             maze = jsonReader.readMaze();
             size = maze.getSize();
@@ -75,7 +75,7 @@ public class Simulator {
 
     // EFFECTS: save maze and player to json file
     private void save() throws FileNotFoundException {
-        JSONWriter jsonWriter = new JSONWriter(DATA);
+        JsonWriter jsonWriter = new JsonWriter(DATA);
         jsonWriter.write(maze, player);
         jsonWriter.close();
     }
