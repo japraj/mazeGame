@@ -1,9 +1,10 @@
 package model.maze;
 
 import model.path.Position;
+import persistence.Saveable;
 
 // A square, read-only maze; see class-level comment of Maze for a detailed description
-public interface ImmutableMaze {
+public interface ImmutableMaze extends Saveable {
 
     // EFFECTS: produce the side-length of the maze
     int getSize();

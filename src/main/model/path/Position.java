@@ -1,9 +1,11 @@
 package model.path;
 
 import model.moveable.Move;
+import org.json.JSONObject;
+import persistence.Saveable;
 
 // A position with x, y in a maze; positions are immutable.
-public class Position {
+public class Position implements Saveable {
 
     private int posX;
     private int posY;
@@ -58,4 +60,12 @@ public class Position {
         return Integer.parseInt(posX + "000" + posY);
     }
 
+    // EFFECTS: produces a JSON representation of this
+    @Override
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("x", posX);
+        obj.put("y", posY);
+        return obj;
+    }
 }

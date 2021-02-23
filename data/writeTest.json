@@ -1,0 +1,66 @@
+{
+    "maze": {
+        "size": 7,
+        "maze": "0000000010111001010100101010010001001111100000000"
+    },
+    "player": {
+        "path": {
+            "path": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 2,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 1,
+                    "y": 3,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 1,
+                    "y": 4,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 1,
+                    "y": 5,
+                    "direction": "DOWN"
+                }
+            ],
+            "visited": [
+                {
+                    "x": 1,
+                    "y": 1
+                },
+                {
+                    "x": 1,
+                    "y": 2,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 1,
+                    "y": 3,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 1,
+                    "y": 4,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 1,
+                    "y": 5,
+                    "direction": "DOWN"
+                }
+            ]
+        },
+        "pos": {
+            "x": 1,
+            "y": 5
+        }
+    }
+}

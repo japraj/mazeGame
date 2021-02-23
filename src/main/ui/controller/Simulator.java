@@ -8,8 +8,11 @@ import model.moveable.Player;
 import model.path.Path;
 import model.solver.FirstPath;
 import model.solver.MazeSolver;
+import persistence.JSONReader;
+import persistence.JSONWriter;
 import ui.output.Printer;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -18,6 +21,7 @@ import java.util.Scanner;
 public class Simulator {
 
     private static final List<String> MOVES = Arrays.asList("up", "down", "left", "right");
+    private static final String DATA = "./data/state.json";
 
     // models
     private MazeGenerator mazeGenerator;
@@ -32,25 +36,53 @@ public class Simulator {
 
     // EFFECTS: initialize and start the app
     public Simulator() {
-        size = Maze.MIN_SIZE;
-        mazeGenerator = new MazeGenerator(size);
-        maze = mazeGenerator.generateMaze();
-        solver = new FirstPath(maze, new Path());
-        player = new Player(maze);
-
-        reader = new Scanner(System.in);
-        printer = new Printer(maze);
+        init();
 
         try {
             run();
         } catch (InterruptedException e) {
             printer.printError();
+        } catch (FileNotFoundException e) {
+            printer.printSaveError();
         }
     }
 
     // MODIFIES: this
+    // EFFECTS: initialize this; try to read from .json file and if that fails, revert to default values
+    private void init() {
+        // model
+        try {
+            JSONReader jsonReader = new JSONReader(DATA);
+
+            maze = jsonReader.readMaze();
+            size = maze.getSize();
+            mazeGenerator = new MazeGenerator(size);
+            player = jsonReader.readPlayer(maze);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // if reading json file fails, use default values
+            size = Maze.MIN_SIZE;
+            mazeGenerator = new MazeGenerator(size);
+            maze = mazeGenerator.generateMaze();
+            player = new Player(maze);
+        }
+        solver = new FirstPath(maze, new Path());
+
+        // i/o
+        reader = new Scanner(System.in);
+        printer = new Printer(maze);
+    }
+
+    // EFFECTS: save maze and player to json file
+    private void save() throws FileNotFoundException {
+        JSONWriter jsonWriter = new JSONWriter(DATA);
+        jsonWriter.write(maze, player);
+        jsonWriter.close();
+    }
+
+    // MODIFIES: this
     // EFFECTS: runs the app
-    private void run() throws InterruptedException {
+    private void run() throws InterruptedException, FileNotFoundException {
         printer.printWelcome();
         printer.printHelp();
         printer.printPlayerMaze(player);
@@ -68,6 +100,7 @@ public class Simulator {
             } else if (input.equals("animate-solve")) {
                 animateSolve();
             } else if (input.equals("quit")) {
+                save();
                 return;
             } else {
                 printer.printInvalidInput();

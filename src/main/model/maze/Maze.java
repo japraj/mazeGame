@@ -1,6 +1,7 @@
 package model.maze;
 
 import model.path.Position;
+import org.json.JSONObject;
 
 // A square Maze; each cell is a boolean (true and false represent PATH and WALL, respectively). A maze is started at
 // the top left, at position (1, 1) and terminate in the bottom right, at position (size - 2, size - 2); the maze
@@ -28,6 +29,19 @@ public class Maze implements ImmutableMaze {
         maze = new boolean[size][size];
         // boolean arrays are initialized to false, so the second part of the effects clause is automatically satisfied
         // given that WALL == false
+    }
+
+    // REQUIRES: size must be an odd integer in the range [MIN_SIZE, MAX_SIZE] and encoding must have been produced by
+    //           Maze.toString
+    // MODIFIES: this
+    // EFFECTS: sets the size of this and initializes maze with respect to encoding
+    public Maze(int size, String encoding) {
+        maze = new boolean[size][size]; // see above constructor for explanation
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                maze[y][x] = encoding.charAt(x + y * size) == '0' ? WALL : PATH;
+            }
+        }
     }
 
     // EFFECTS: produce the side-length of the maze
@@ -67,4 +81,25 @@ public class Maze implements ImmutableMaze {
         maze[pos.getPosY()][pos.getPosX()] = value;
     }
 
+    // EFFECTS: produces a String representation of the maze represented by this; notation: convert 2d array into
+    //          a binary int, with 0 == WALL and 1 == PATH
+    @Override
+    public String toString() {
+        StringBuilder bint = new StringBuilder(); // bint == binary integer
+        for (int y = 0; y < maze.length; y++) {
+            for (int x = 0; x < maze.length; x++) {
+                bint.append(maze[y][x] == WALL ? 0 : 1);
+            }
+        }
+        return bint.toString();
+    }
+
+    // EFFECTS: produces a JSON representation of this
+    @Override
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("size", maze.length);
+        obj.put("maze", toString());
+        return obj;
+    }
 }

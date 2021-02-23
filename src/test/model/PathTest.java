@@ -201,6 +201,12 @@ public class PathTest {
         // test unseen node
         assertFalse(path.containsNode(new Position(3, 5)));
         assertFalse(path.visitedNode(new Position(3, 5)));
+
+        // test forceAdd
+        assertFalse(path.visitedNode(new Position(30, 30)));
+        path.addVisited(new Position(30, 30));
+        assertFalse(path.containsNode(new Position(30, 30)));
+        assertTrue(path.visitedNode(new Position(30, 30)));
     }
 
     @Test

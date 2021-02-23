@@ -1,11 +1,14 @@
 package model.path;
 
 import model.moveable.Move;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Saveable;
 
 import java.util.*;
 
 // A Path in a Maze; always starts with the PathNode (1,1, null)
-public class Path {
+public class Path implements Saveable {
 
     private List<PathNode> path;
     private PathNode tail;
@@ -15,7 +18,8 @@ public class Path {
     private List<Move> currentBranch;
     private boolean noDuplicatesNodes;
 
-    // EFFECTS: start the Path with the Position (1,1) and set that as current node; allows dupes
+    // EFFECTS: start the Path with the Position (1,1) and set that as current node; allows dupes, has no branches, and
+    //          has default index
     public Path() {
         path = new ArrayList<>();
         tail = new PathNode(1, 1, null);
@@ -26,6 +30,18 @@ public class Path {
         branches = new LinkedList<>();
         currentBranch = new ArrayList<>();
         noDuplicatesNodes = false;
+    }
+
+    // EFFECTS: creates a Path with given pathNodes and visited; allows dupes, has no branches, and default index
+    public Path(List<PathNode> path, Set<Position> visited) {
+        this.path = path;
+        tail = path.get(path.size() - 1);
+        this.visited = visited;
+        index = 0;
+        branches = new LinkedList<>();
+        currentBranch = new ArrayList<>();
+        noDuplicatesNodes = false;
+
     }
 
     // EFFECTS: start the Path with the Position (1,1) and set that as current node, and use given flag to determine
@@ -84,6 +100,12 @@ public class Path {
     // EFFECTS: produce true if this node is in current path
     public boolean containsNode(int x, int y) {
         return containsNode(new Position(x, y));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: records that pos has been visited
+    public void addVisited(Position pos) {
+        visited.add(pos);
     }
 
     // EFFECTS: produce true if this node has been seen in this path before (even if it is not present in the current
@@ -194,6 +216,26 @@ public class Path {
     // EFFECTS: produce length of this
     public int getLength() {
         return path.size();
+    }
+
+    // EFFECTS: produces a JSON representation of this
+    @Override
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+
+        JSONArray arr = new JSONArray();
+        for (PathNode p : path) {
+            arr.put(p.toJSON());
+        }
+        obj.put("path", arr);
+
+        arr = new JSONArray();
+        for (Position p : visited) {
+            arr.put(p.toJSON());
+        }
+        obj.put("visited", arr);
+
+        return obj;
     }
 
 }

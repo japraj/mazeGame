@@ -28,6 +28,9 @@ spice up the game. The goal is to complete the maze in the shortest possible tim
  - use Printer and an implementation of MazeSolver to see the solution Path for the Maze
  - use Printer to watch an animation of intermediate Paths produced by a MazeSolver
  - add a sequence of Moves to my current Path to traverse the Maze
+ - have the current Maze and my current Player implicitly saved when I quit the application
+ - have my previous Maze and Player automatically loaded (if possible) when I launch the application
+ - have a random maze produced when I launch the app if there is no previous state to load
  
  ## Original Maze Game
  

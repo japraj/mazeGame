@@ -3,9 +3,11 @@ package model.moveable;
 import model.maze.ImmutableMaze;
 import model.path.Path;
 import model.path.Position;
+import org.json.JSONObject;
+import persistence.Saveable;
 
 // An entity that can move within a maze and keeps track of its path
-public class Player extends MoveableEntity {
+public class Player extends MoveableEntity implements Saveable {
 
     private Path path;
 
@@ -13,6 +15,12 @@ public class Player extends MoveableEntity {
     public Player(ImmutableMaze maze) {
         super(maze, new Position(1, 1));
         path = new Path();
+    }
+
+    // EFFECTS: initialize the player with given path and position
+    public Player(ImmutableMaze maze, Position pos, Path path) {
+        super(maze, pos);
+        this.path = path;
     }
 
     // MODIFIES: this
@@ -28,5 +36,13 @@ public class Player extends MoveableEntity {
     // EFFECTS: produce path player has taken so far
     public Path getPath() {
         return path;
+    }
+
+    // EFFECTS: produces a JSON representation of this
+    @Override
+    public JSONObject toJSON() {
+        JSONObject obj = super.toJSON();
+        obj.put("path", path.toJSON());
+        return obj;
     }
 }

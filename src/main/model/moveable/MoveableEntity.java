@@ -3,9 +3,11 @@ package model.moveable;
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.path.Position;
+import org.json.JSONObject;
+import persistence.Saveable;
 
 // An entity that can move within a maze
-public abstract class MoveableEntity {
+public abstract class MoveableEntity implements Saveable {
 
     protected ImmutableMaze maze;
     protected Position position;
@@ -29,5 +31,13 @@ public abstract class MoveableEntity {
     // EFFECTS: produce current position of this entity
     public Position getPosition() {
         return position;
+    }
+
+    // EFFECTS: produces a JSON representation of this
+    @Override
+    public JSONObject toJSON() {
+        JSONObject obj = new JSONObject();
+        obj.put("pos", position.toJSON());
+        return obj;
     }
 }

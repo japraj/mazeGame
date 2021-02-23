@@ -1,6 +1,5 @@
 package ui.output;
 
-import com.sun.javafx.scene.traversal.Direction;
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.moveable.Move;
@@ -44,6 +43,11 @@ public class Printer {
     // EFFECTS: print an error message
     public void printError() {
         System.out.println("Oops, something went wrong!");
+    }
+
+    // EFFECTS: print an error message about saving data
+    public void printSaveError() {
+        System.out.println("Oops, failed to save data!");
     }
 
     // EFFECTS: prints congratulations message

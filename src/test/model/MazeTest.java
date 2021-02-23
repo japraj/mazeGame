@@ -1,5 +1,7 @@
 package model;
 
+import model.generator.MazeGenerator;
+import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,18 @@ public class MazeTest {
             assertEquals(Maze.WALL, maze.getCell(0, i));
             assertEquals(Maze.WALL, maze.getCell(i, SIZE - 1));
             assertEquals(Maze.WALL, maze.getCell(SIZE - 1, i));
+        }
+    }
+
+    @Test
+    public void testAltConstructor() {
+        MazeGenerator generator = new MazeGenerator(11);
+        ImmutableMaze generatedMaze = generator.generateMaze();
+        Maze constructedMaze = new Maze(11, generatedMaze.toString());
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 7; x++) {
+                assertEquals(generatedMaze.getCell(x, y), constructedMaze.getCell(x, y));
+            }
         }
     }
 

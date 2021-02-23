@@ -1,6 +1,7 @@
 package model.path;
 
 import model.moveable.Move;
+import org.json.JSONObject;
 
 // A Position in a Path that keeps track of how this position was obtained from the previous node in the Path
 // that this is associated with; primary usage: rendering
@@ -40,4 +41,11 @@ public class PathNode extends Position {
         return new PathNode(super.applyMove(direction), direction);
     }
 
+    // EFFECTS: produces a JSON representation of this
+    @Override
+    public JSONObject toJSON() {
+        JSONObject obj = super.toJSON();
+        obj.put("direction", direction);
+        return obj;
+    }
 }
