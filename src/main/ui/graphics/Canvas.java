@@ -102,11 +102,12 @@ public class Canvas extends JPanel {
         paintPathNode(g, p.getTail());
     }
 
-    // MODIFIES: g, solver
+    // MODIFIES: this, g, solver
     // EFFECTS: changes g's color, ticks solver to completion; if animate is true, animates the intermediate steps (at
     //          FPS steps per second), else simply draws the solution path
     public void paintSolver(Graphics g, ImmutableMaze maze, MazeSolver solver, boolean animate) {
         paintMaze(g, maze);
+        pathEngine = new PathEngine();
         int delay = 1000 / FPS; // 1000 ms per second; this delay is in ms
         while (!solver.isSolved()) {
             if (animate) {
@@ -120,7 +121,9 @@ public class Canvas extends JPanel {
                 solver.tick();
             }
         }
-        paintSingularPath(g, solver.getPath());
+        if (!animate) {
+            paintSingularPath(g, solver.getPath());
+        }
     }
 
     // MODIFIES: this, g
