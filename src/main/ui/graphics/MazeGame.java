@@ -23,22 +23,10 @@ import java.io.FileNotFoundException;
 // CITATION: https://github.students.cs.ubc.ca/CPSC210/B02-SpaceInvadersBase.git
 public class MazeGame extends JFrame {
 
-    // Hard-coded Color Values & Fonts
-    // Gray1 is the Darkest Gray and Gray4 is the Lightest Gray
-    // Gray2 / Gray3 are in between
-    private static final Color GRAY1 = new Color(37, 37, 39);
-    private static final Color GRAY2 = new Color(45, 44, 49);
-    private static final Color GRAY3 = new Color(62, 62, 70);
-    private static final Color GRAY4 = new Color(68, 67, 73);
-    private static final Color BLUE = new Color(0, 122, 206);
-    private static final Color DULLBLUE = new Color(121, 170, 210);
-    private static final Color LIGHTBLUE = new Color(181, 255, 255);
-
-    // The following Colors are the ones being used in the GUI; never use the ones above!
-    public static final Color BACKGROUND = GRAY1;
-    public static final Color ACCENTS = BLUE;
+    // Colors and fonts
+    public static final Color BACKGROUND = new Color(37, 37, 39);
+    public static final Color ACCENTS = new Color(0, 122, 206);
     public static final Color TEXT_COLOR = Color.white;
-
     public static final Font HEADER = new Font("Dialog", Font.PLAIN, 15);
     public static final Font TEXT_FONT = new Font("Tahoma", Font.PLAIN, 13);
 
