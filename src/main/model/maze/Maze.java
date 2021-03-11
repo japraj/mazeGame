@@ -18,17 +18,11 @@ public class Maze implements ImmutableMaze {
     public static final boolean PATH = true;
     public static final boolean WALL = false;
 
-    public static final int MAX_SIZE = 31;
-//    public static final int MAX_SIZE = floorOdd(
-//                                        Toolkit.getDefaultToolkit().getScreenSize().getHeight()
-//                                            / Canvas.CELL_LENGTH);
-    public static final int MIN_SIZE = 7;
-
     // this class provides an abstraction on top of this 2-dimensional array - all methods use x, y notation instead of
     // the i, j notation associated with matrices; y determines row while x determines column, so x, y means maze[y][x]
     private boolean[][] maze;
 
-    // REQUIRES: size must be odd and in the range [MIN_SIZE, MAX_SIZE]
+    // REQUIRES: size must be odd and in the range [MazeGame.MIN_SIZE, MazeGame.MAX_SIZE]
     // EFFECTS: set the size of this maze and initialize the maze so that the top/bottom rows and left-most/right-most
     // columns are WALL
     public Maze(int size) {
@@ -38,8 +32,8 @@ public class Maze implements ImmutableMaze {
         // given that WALL == false
     }
 
-    // REQUIRES: size must be an odd integer in the range [MIN_SIZE, MAX_SIZE] and encoding must have been produced by
-    //           Maze.toString
+    // REQUIRES: size must be an odd integer in the range [MazeGame.MIN_SIZE, MazeGame.MAX_SIZE] and encoding must have
+    //           been produced by Maze.toString
     // MODIFIES: this
     // EFFECTS: sets the size of this and initializes maze with respect to encoding
     public Maze(int size, String encoding) {
@@ -111,7 +105,7 @@ public class Maze implements ImmutableMaze {
     }
 
     // EFFECTS: produces the largest odd integer less than arg
-    private static int floorOdd(double arg) {
+    public static int floorOdd(double arg) {
         return (int) arg % 2 == 0 ? (int) arg - 1 : (int) arg;
     }
 }

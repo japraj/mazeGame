@@ -5,13 +5,14 @@ import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ui.graphics.MazeGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MazeTest {
 
     private Maze maze;
-    private static final int SIZE = Maze.MIN_SIZE;
+    private static final int SIZE = MazeGame.MIN_SIZE;
 
     @BeforeEach
     public void setup() {
@@ -57,6 +58,14 @@ public class MazeTest {
         maze.setCell(2, 1, false);
         assertTrue(maze.getCell(1, 2));
         assertFalse(maze.getCell(2, 1));
+    }
+
+    @Test
+    public void testFloorOdd() {
+        assertEquals(3, Maze.floorOdd(3.2));
+        assertEquals(3, Maze.floorOdd(4.2));
+        assertEquals(3, Maze.floorOdd(3));
+        assertEquals(5, Maze.floorOdd(6.232));
     }
 
 }

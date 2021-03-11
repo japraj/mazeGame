@@ -20,7 +20,7 @@ public class MazeGenerator {
     private List<Position> visited;
     private Stack<Position> stack;
 
-    // REQUIRES: size must be odd and in [Maze.MIN_SIZE, Maze.MAX_SIZE]
+    // REQUIRES: size must be odd and in [MazeGame.MIN_SIZE, Maze.MAX_SIZE]
     // EFFECTS: initialize maze
     public MazeGenerator(int size) {
         this.size = size;
@@ -46,7 +46,7 @@ public class MazeGenerator {
         }
     }
 
-    // REQUIRES: size must be odd and in [Maze.MIN_SIZE, Maze.MAX_SIZE]
+    // REQUIRES: size must be odd and in [MazeGame.MIN_SIZE, Maze.MAX_SIZE]
     // MODIFIES: this
     // EFFECTS: produce a square maze with specified side-length
     public ImmutableMaze generateMaze(int size) {

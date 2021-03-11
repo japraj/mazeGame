@@ -8,6 +8,7 @@ import model.solver.FirstPath;
 import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ui.graphics.MazeGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,30 +19,30 @@ public class MazeGeneratorTest {
 
     @BeforeEach
     public void setup() {
-        mazeGenerator = new MazeGenerator(Maze.MIN_SIZE % 2 == 1 ? Maze.MIN_SIZE : Maze.MIN_SIZE + 1);
+        mazeGenerator = new MazeGenerator(MazeGame.MIN_SIZE % 2 == 1 ? MazeGame.MIN_SIZE : MazeGame.MIN_SIZE + 1);
         maze = mazeGenerator.generateMaze();
     }
 
     @Test
     public void testUntouchedSurroundings() {
-        for (int i = 0; i < Maze.MIN_SIZE; i++) {
+        for (int i = 0; i < MazeGame.MIN_SIZE; i++) {
             assertEquals(Maze.WALL, maze.getCell(i, 0));
             assertEquals(Maze.WALL, maze.getCell(0, i));
-            assertEquals(Maze.WALL, maze.getCell(i, Maze.MIN_SIZE - 1));
-            assertEquals(Maze.WALL, maze.getCell(Maze.MIN_SIZE - 1, i));
+            assertEquals(Maze.WALL, maze.getCell(i, MazeGame.MIN_SIZE - 1));
+            assertEquals(Maze.WALL, maze.getCell(MazeGame.MIN_SIZE - 1, i));
         }
     }
 
     @Test
     public void testPathWallRatio() {
-        // make sure that the number of walls and paths are both > Maze.MIN_SIZE; this is to make sure that
+        // make sure that the number of walls and paths are both > MazeGame.MIN_SIZE; this is to make sure that
         // the generation algorithm is in fact placing walls/paths (the size constraint is somewhat arbitrary
         // but we can be confident that both constraints will be met by any working maze-gen implementation
         // because area (# cells) increases quadratically w/ size)
         int pathCounter = 0;
         int wallCounter = 0;
-        for (int i = 0; i < Maze.MIN_SIZE; i++) {
-            for (int j = 0; j < Maze.MIN_SIZE; j++) {
+        for (int i = 0; i < MazeGame.MIN_SIZE; i++) {
+            for (int j = 0; j < MazeGame.MIN_SIZE; j++) {
                 if (maze.getCell(i, j) == Maze.PATH) {
                     pathCounter++;
                 } else {
@@ -49,8 +50,8 @@ public class MazeGeneratorTest {
                 }
             }
         }
-        assertTrue(pathCounter > Maze.MIN_SIZE);
-        assertTrue(wallCounter > Maze.MIN_SIZE);
+        assertTrue(pathCounter > MazeGame.MIN_SIZE);
+        assertTrue(wallCounter > MazeGame.MIN_SIZE);
     }
 
     @Test
@@ -58,7 +59,7 @@ public class MazeGeneratorTest {
         // test 50 times to make sure the generator doesn't just get lucky!
         MazeSolver solver;
         int ticks;
-        int size = (Maze.MIN_SIZE + Maze.MAX_SIZE) / 2;
+        int size = (MazeGame.MIN_SIZE + MazeGame.MAX_SIZE) / 2;
         // make sure it is odd
         if (size % 2 == 0) {
             size--;
