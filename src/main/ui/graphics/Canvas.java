@@ -10,8 +10,11 @@ import model.path.PathNode;
 import model.path.Position;
 import model.solver.MazeSolver;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 // A canvas that handles rendering of maze, player, and paths
@@ -25,6 +28,7 @@ public class Canvas extends JPanel {
     public static final Color PLAYER_COLOR = Color.RED;
     public static final int PLAYER_WIDTH = PATH_WIDTH + 2;
     public static final int FPS = 30;
+    public static final String IMAGE_PATH = "./data/congrats.jpg";
 
     private PathEngine pathEngine;
 
@@ -195,13 +199,24 @@ public class Canvas extends JPanel {
     }
 
     // MODIFIES: g
-    // EFFECTS: paints a win message, changes g's color
+    // EFFECTS: paints a win message, changes g's color, tries to draw a congratulations image (prints error msg to
+    //          console on failure)
     public void paintWin(Graphics g) {
         wipeScreen(g);
         g.setColor(Color.WHITE);
+        try {
+            g.drawImage(ImageIO.read(new File(IMAGE_PATH)),
+                    CELL_LENGTH * 8,
+                    CELL_LENGTH * 3,
+                    CELL_LENGTH * 8,
+                    CELL_LENGTH * 4,
+                    null);
+        } catch (IOException e) {
+            System.out.println("Failed to draw image");
+        }
         g.drawString("Congratulations, you have completed this maze! Press space to try again.",
-                    CELL_LENGTH * 5 + (CELL_LENGTH / 2),
-                    CELL_LENGTH * 5 + (CELL_LENGTH / 2));
+                    CELL_LENGTH * 5,
+                    CELL_LENGTH * 8);
     }
 
     // MODIFIES: g

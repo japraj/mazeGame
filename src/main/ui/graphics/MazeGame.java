@@ -98,7 +98,9 @@ public class MazeGame extends JFrame {
     // MODIFIES: this
     // EFFECTS: ticks the simulation
     private void tick() {
-        canvas.requestFocus();
+        if (hasFocus()) {
+            canvas.requestFocus();
+        }
     }
 
     // MODIFIES: this
@@ -117,13 +119,16 @@ public class MazeGame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: loads fields from input file; throws Exception if file is not found or reader is unable to read from
-    //          file
+    // EFFECTS: loads fields from input file; throws IOException if file is not found or reader is unable to read from
+    //          file, and IllegalStateException if file has illegal values (even if it is readable)
     public void load(boolean reset) throws Exception {
         JsonReader jsonReader = new JsonReader(DATA);
 
         maze = jsonReader.readMaze();
         size = maze.getSize();
+        if (size > Maze.MAX_SIZE) {
+            throw new IllegalStateException("Maze size out of bounds");
+        }
         mazeGenerator = new MazeGenerator(size);
         player = jsonReader.readPlayer(maze);
         solver = new FirstPath(maze, new Path());
@@ -185,6 +190,7 @@ public class MazeGame extends JFrame {
             canvas.movePlayer(getTranslatedGraphics(), move, player);
             if (player.getPosition().equals(size - 2, size - 2)) {
                 canvas.paintWin(getTranslatedGraphics());
+                blocked = true;
             }
         }
     }
@@ -199,7 +205,7 @@ public class MazeGame extends JFrame {
         } else if (size > Maze.MAX_SIZE) {
             size = Maze.MAX_SIZE;
         }
-        size = size % 2 == 1 ? size : size + 1;
+        this.size = size % 2 == 1 ? size : size + 1;
         // generate maze and update refs
         maze = mazeGenerator.generateMaze(size);
         solver = new FirstPath(maze, new Path());

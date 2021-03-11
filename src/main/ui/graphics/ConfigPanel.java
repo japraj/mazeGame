@@ -65,6 +65,9 @@ public class ConfigPanel extends JPanel {
         sizeSpinner = new JSpinner(new SpinnerNumberModel(size, Maze.MIN_SIZE, Maze.MAX_SIZE, 2));
         addLabelledComponent(genPanel, sizeSpinner, "Size: ", c);
         sizeSpinner.setFocusable(false);
+        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) sizeSpinner.getEditor();
+        editor.getTextField().setFocusable(false);
+        editor.getTextField().setEditable(false);
 
         c.weightx = 0.5;
 
