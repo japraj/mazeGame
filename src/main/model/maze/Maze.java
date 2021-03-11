@@ -18,9 +18,10 @@ public class Maze implements ImmutableMaze {
     public static final boolean PATH = true;
     public static final boolean WALL = false;
 
-    public static final int MAX_SIZE = floorOdd(
-                                        Toolkit.getDefaultToolkit().getScreenSize().getHeight()
-                                            / Canvas.CELL_LENGTH);
+    public static final int MAX_SIZE = 31;
+//    public static final int MAX_SIZE = floorOdd(
+//                                        Toolkit.getDefaultToolkit().getScreenSize().getHeight()
+//                                            / Canvas.CELL_LENGTH);
     public static final int MIN_SIZE = 7;
 
     // this class provides an abstraction on top of this 2-dimensional array - all methods use x, y notation instead of
