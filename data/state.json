@@ -29,6 +29,26 @@
                     "x": 3,
                     "y": 3,
                     "direction": "RIGHT"
+                },
+                {
+                    "x": 3,
+                    "y": 4,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 3,
+                    "y": 3,
+                    "direction": "UP"
+                },
+                {
+                    "x": 3,
+                    "y": 4,
+                    "direction": "DOWN"
+                },
+                {
+                    "x": 3,
+                    "y": 3,
+                    "direction": "UP"
                 }
             ],
             "visited": [
@@ -38,23 +58,24 @@
                 },
                 {
                     "x": 1,
-                    "y": 2,
-                    "direction": "DOWN"
+                    "y": 2
                 },
                 {
                     "x": 1,
-                    "y": 3,
-                    "direction": "DOWN"
+                    "y": 3
                 },
                 {
                     "x": 2,
-                    "y": 3,
-                    "direction": "RIGHT"
+                    "y": 3
                 },
                 {
                     "x": 3,
-                    "y": 3,
-                    "direction": "RIGHT"
+                    "y": 3
+                },
+                {
+                    "x": 3,
+                    "y": 4,
+                    "direction": "DOWN"
                 }
             ]
         },

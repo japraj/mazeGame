@@ -1,5 +1,6 @@
 package model.path;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -15,7 +16,7 @@ public class PathEngine {
 
     // EFFECTS: initializes this with 0 paths currently placed
     public PathEngine() {
-        placed = new Stack<>();
+        placed = new ArrayList<>();
     }
 
     // MODIFIES: this
