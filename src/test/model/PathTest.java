@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -301,4 +302,72 @@ public class PathTest {
         assertNull(node.getDirection());
         assertTrue(node.equals(1, 1));
     }
+
+    @Test
+    public void testSubtractionCommonOriginDirection() {
+        Path pathA = new Path();
+        pathA.addNode(Move.DOWN);
+        pathA.addNode(Move.DOWN);
+        pathA.addNode(Move.DOWN);
+        pathA.addNode(Move.DOWN);
+
+        Path pathB = new Path();
+        pathB.addNode(Move.DOWN);
+        pathB.addNode(Move.DOWN);
+        pathB.addNode(Move.RIGHT);
+        pathB.addNode(Move.DOWN);
+        pathB.addNode(Move.DOWN);
+
+        // this is a call to the static method
+        List<PathNode> difference1 = Path.subtract(pathA.getNodes(), pathB.getNodes(), false);
+        assertEquals(2, difference1.size());
+        assertTrue(difference1.contains(new PathNode(1, 4, Move.DOWN)));
+        assertTrue(difference1.contains(new PathNode(1, 5, Move.DOWN)));
+
+        // call to the non-static overload
+        List<PathNode> difference2 = pathB.subtract(pathA.getNodes(), false);
+        assertEquals(3, difference2.size());
+        assertTrue(difference2.contains(new PathNode(2, 3, Move.RIGHT)));
+        assertTrue(difference2.contains(new PathNode(2, 4, Move.DOWN)));
+        assertTrue(difference2.contains(new PathNode(2, 5, Move.DOWN)));
+
+        List<PathNode> difference3 = pathB.subtract(pathA.getNodes(), true);
+        assertEquals(4, difference3.size());
+        for (PathNode p : difference2) {
+            assertTrue(difference3.contains(p));
+        }
+        assertTrue(difference3.contains(new PathNode(1, 3, Move.DOWN)));
+    }
+
+    @Test
+    public void testSubtractionUniqueOriginDirection() {
+        Path pathA = new Path();
+        pathA.addNode(Move.DOWN);
+
+        Path pathB = new Path();
+        pathB.addNode(Move.RIGHT);
+        pathB.addNode(Move.DOWN);
+        pathB.addNode(Move.LEFT);
+
+        List<PathNode> difference1 = pathA.subtract(pathB.getNodes(), true);
+        assertEquals(1, difference1.size());
+        assertEquals(new PathNode(1, 2, Move.DOWN), difference1.get(0));
+
+        List<PathNode> difference2 = pathB.subtract(pathA.getNodes(), true);
+        assertEquals(3, difference2.size());
+        assertTrue(difference2.contains(new PathNode(2, 1, Move.RIGHT)));
+        assertTrue(difference2.contains(new PathNode(2, 2, Move.DOWN)));
+        assertTrue(difference2.contains(new PathNode(1, 2, Move.LEFT)));
+        assertEquals(difference2, pathB.subtract(pathA.getNodes(), false));
+    }
+
+    @Test
+    public void testSubtractionSymmetry() {
+        Path path = new Path();
+        for (int i = 0; i < 10; i++) {
+            path.addNode(Move.DOWN);
+        }
+        assertTrue(path.subtract(path.getNodes(), false).isEmpty());
+    }
+
 }

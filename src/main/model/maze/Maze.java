@@ -2,6 +2,9 @@ package model.maze;
 
 import model.path.Position;
 import org.json.JSONObject;
+import ui.graphics.Canvas;
+
+import java.awt.*;
 
 // A square Maze; each cell is a boolean (true and false represent PATH and WALL, respectively). A maze is started at
 // the top left, at position (1, 1) and terminate in the bottom right, at position (size - 2, size - 2); the maze
@@ -15,7 +18,9 @@ public class Maze implements ImmutableMaze {
     public static final boolean PATH = true;
     public static final boolean WALL = false;
 
-    public static final int MAX_SIZE = 15;
+    public static final int MAX_SIZE = floorOdd(
+                                        Toolkit.getDefaultToolkit().getScreenSize().getHeight()
+                                            / Canvas.CELL_LENGTH);
     public static final int MIN_SIZE = 7;
 
     // this class provides an abstraction on top of this 2-dimensional array - all methods use x, y notation instead of
@@ -26,6 +31,7 @@ public class Maze implements ImmutableMaze {
     // EFFECTS: set the size of this maze and initialize the maze so that the top/bottom rows and left-most/right-most
     // columns are WALL
     public Maze(int size) {
+        size = floorOdd(size);
         maze = new boolean[size][size];
         // boolean arrays are initialized to false, so the second part of the effects clause is automatically satisfied
         // given that WALL == false
@@ -101,5 +107,10 @@ public class Maze implements ImmutableMaze {
         obj.put("size", maze.length);
         obj.put("maze", toString());
         return obj;
+    }
+
+    // EFFECTS: produces the largest odd integer less than arg
+    private static int floorOdd(double arg) {
+        return (int) arg % 2 == 0 ? (int) arg - 1 : (int) arg;
     }
 }

@@ -12,7 +12,9 @@ import java.util.List;
 // An Algorithm that solves the given maze
 public abstract class MazeSolver {
 
-    public static final Move[] MOVES = {Move.UP, Move.DOWN, Move.LEFT, Move.RIGHT};
+    // The order of MOVES actually makes a significant difference to backtracking solvers; it determines what directions
+    // we prioritize; we want DOWN and RIGHT to be prioritized because they are the direction of our goal!
+    public static final Move[] MOVES = {Move.DOWN, Move.RIGHT, Move.UP, Move.LEFT };
     protected ImmutableMaze maze;
     protected Path path;
 

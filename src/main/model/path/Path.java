@@ -171,6 +171,41 @@ public class Path implements Saveable {
         }
     }
 
+    // EFFECTS: produces a list of nodes that are in 'a' but not in 'b', starting from the end of 'a' until a node that
+    //          is present in both (with same position and direction) is found; includes the common node iff
+    //          includeCommon is true
+    public static List<PathNode> subtract(List<PathNode> a, List<PathNode> b, boolean includeCommon) {
+        List<PathNode> difference = new LinkedList<>();
+        // iterate over p's last n nodes til we find a common node or run out of nodes for one of the elements; we will
+        // always find a node because at the very least, both this and p share the common node (1, 1, null)
+        PathNode thisNode;
+        for (int i = 1; i < a.size(); i++) {
+            thisNode = a.get(a.size() - i);
+            if (b.contains(thisNode) && b.get(b.indexOf(thisNode)).getDirection() == thisNode.getDirection()) {
+                if (includeCommon) {
+                    difference.add(thisNode);
+                }
+                return difference;
+            } else {
+                difference.add(thisNode);
+            }
+        }
+        return difference;
+    }
+
+
+    // EFFECTS: produces a list of nodes that are in this but not in p, starting from the end of this until a node that
+    //          is present in both (with same position and direction) is found; includes the common node iff
+    //          includeCommon is true
+    public List<PathNode> subtract(List<PathNode> p, boolean includeCommon) {
+        return subtract(path, p, includeCommon);
+    }
+
+    // REQUIRES: only used in tests
+    // EFFECTS: produces the list of pathNodes
+    public List<PathNode> getNodes() {
+        return path;
+    }
 
     // EFFECTS: produces true if object is a Path and all nodes in this are present in given path, in same order
     @Override
@@ -209,7 +244,7 @@ public class Path implements Saveable {
     }
 
     // EFFECTS: produces the position of the last node in the path
-    public Position getTail() {
+    public PathNode getTail() {
         return tail;
     }
 
