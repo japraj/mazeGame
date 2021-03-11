@@ -6,7 +6,6 @@ import ui.graphics.MazeGame;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        //new Simulator();
         new MazeGame();
     }
 
