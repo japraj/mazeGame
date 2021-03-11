@@ -191,9 +191,9 @@ public class MazeGame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: if size is an odd int in the range [MazeGame.MIN_SIZE, Maze.MAX_SIZE], generates new maze of specified
-    //          size else if size does not conform to those constraints, forces it to do so and then generates a maze of
-    //          size
+    // EFFECTS: if size is an odd int in the range [MazeGame.MIN_SIZE, MazeGame.MAX_SIZE], generates new maze of
+    //          specified size else if size does not conform to those constraints, forces it to do so and then generates
+    //          a maze of size
     public void generateNewMaze(int size) {
         // set size
         if (size < MIN_SIZE) {

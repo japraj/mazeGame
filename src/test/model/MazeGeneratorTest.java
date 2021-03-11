@@ -14,12 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MazeGeneratorTest {
 
+    private static final int MAX_TICKS = 2000;
+
     private MazeGenerator mazeGenerator;
     private ImmutableMaze maze;
 
     @BeforeEach
     public void setup() {
-        mazeGenerator = new MazeGenerator(MazeGame.MIN_SIZE % 2 == 1 ? MazeGame.MIN_SIZE : MazeGame.MIN_SIZE + 1);
+        mazeGenerator = new MazeGenerator(MazeGame.MIN_SIZE);
         maze = mazeGenerator.generateMaze();
     }
 
@@ -55,18 +57,27 @@ public class MazeGeneratorTest {
     }
 
     @Test
-    public void testSolveable() {
-        // test 50 times to make sure the generator doesn't just get lucky!
+    public void testSingleSolve() {
+        maze = mazeGenerator.generateMaze(MazeGame.MIN_SIZE * 2 - 1);
+        MazeSolver solver = new FirstPath(maze, new Path());
+        int ticks = 0;
+        while (!solver.isSolved() && ticks < MAX_TICKS) {
+            solver.tick();
+            ticks++;
+        }
+        if (ticks == MAX_TICKS) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testMultipleSolve() {
+        // test several times to make sure the generator doesn't just get lucky!
         MazeSolver solver;
         int ticks;
-        int size = (MazeGame.MIN_SIZE + MazeGame.MAX_SIZE) / 2;
-        // make sure it is odd
-        if (size % 2 == 0) {
-            size--;
-        }
+        int size = Maze.floorOdd((MazeGame.MIN_SIZE + MazeGame.MAX_SIZE) / 2);
         // large number to make sure it is given ample chance to solve - if the solver and maze generator both work
         // properly, the test's execution time will be much shorter
-        final int MAX_TICKS = 2000;
         for (int i = 0; i < 50; i++) {
             maze = mazeGenerator.generateMaze(size);
             solver = new FirstPath(maze, new Path());
