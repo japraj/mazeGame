@@ -25,12 +25,14 @@ spice up the game. The goal is to complete the maze in the shortest possible tim
  As a user, I want to be able to...
  
  - use MazeGenerator to produce a random Maze of the specified size
- - use Printer and an implementation of MazeSolver to see the solution Path for the Maze
- - use Printer to watch an animation of intermediate Paths produced by a MazeSolver
- - add a sequence of Moves to my current Path to traverse the Maze
+ - use Canvas and an implementation of MazeSolver to see the solution Path for the Maze
+ - use Canvas to watch an animation of intermediate Paths produced by a MazeSolver
+ - add a sequence of Moves to my current Path to traverse the Maze using the keyboard
  - have the current Maze and my current Player implicitly saved when I quit the application
  - have my previous Maze and Player automatically loaded (if possible) when I launch the application
  - have a random maze produced when I launch the app if there is no previous state to load
+ - use save and load buttons to access data persistence features
+ - see an image when I finish the maze
  
  ## Original Maze Game
  

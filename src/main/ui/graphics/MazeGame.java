@@ -30,7 +30,7 @@ public class MazeGame extends JFrame {
     public static final Font HEADER = new Font("Dialog", Font.PLAIN, 15);
     public static final Font TEXT_FONT = new Font("Tahoma", Font.PLAIN, 13);
 
-    // .json file path & tick Interval
+    // .json file path & tick Interval (seconds)
     private static final String DATA = "./data/state.json";
     private static final int INTERVAL = 33;
 

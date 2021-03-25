@@ -21,7 +21,8 @@ import java.util.List;
 public class Canvas extends JPanel {
 
     // size of a cell in pixels; must be odd and >= 7; 29, 13, 9 work very well. Smaller CELL_LENGTH == more cells!
-    public static final int CELL_LENGTH = 29;
+    // in particular, choosing a number that can be written in the form '5 + 4n', for any n >= 0, will look smooth
+    public static final int CELL_LENGTH = 17;
     public static final Color PATH_COLOR = Color.BLUE;
     public static final Color HEAD_COLOR = Color.DARK_GRAY;
     public static final int PATH_WIDTH = (CELL_LENGTH + 1) / 2;
