@@ -1,6 +1,5 @@
 package model.path;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import model.exceptions.VisitedNodeException;
 import model.moveable.Move;
 import org.json.JSONArray;
