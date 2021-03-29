@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.VisitedNodeException;
 import model.moveable.Move;
 import model.path.Path;
 import model.path.PathNode;
@@ -87,7 +88,26 @@ public class PathTest {
     }
 
     @Test
+    public void testAddNodeResetIndex() {
+        for (int i = 0; i < 5; i++) {
+            path.next();
+        }
+        path.addNode(Move.DOWN);
+        // if below condition is satisfied then index mustve been reset
+        assertEquals(new Position(1, 1), path.getPosition());
+
+        // test overload too
+        for (int i = 0; i < 5; i++) {
+            path.next();
+        }
+        path.addNode(3, 4);
+        assertEquals(new Position(1, 1), path.getPosition());
+    }
+
+    @Test
     public void testTailPop() {
+        // Note: no try catch because IllegalArgument is a RuntimeException
+
         // populate path
         path.addNode(1, 2);
         path.addNode(1, 3);
@@ -120,6 +140,18 @@ public class PathTest {
         path.pop(3);
         assertEquals(1, path.getTail().getPosY());
         assertEquals(1, path.getTail().getPosX());
+    }
+
+    @Test
+    public void testPopException() {
+        try {
+            path.pop(4);
+            fail("Expected Exception");
+        } catch (IllegalArgumentException e) {
+            // make sure path was not mutated
+            assertEquals(1, path.getLength());
+            assertTrue(path.containsNode(1, 1));
+        }
     }
 
     @Test
@@ -255,33 +287,54 @@ public class PathTest {
     }
 
     @Test
-    public void testBranching() {
-        path.addNode(3, 4);
-        path.generateBranches(Arrays.asList(Move.UP, Move.DOWN, Move.LEFT, Move.RIGHT));
-        path.nextBranch();
-        path.generateBranches(Arrays.asList(Move.UP, Move.DOWN, Move.LEFT, Move.RIGHT));
+    public void testBranchingNoExceptions() {
+        try {
+            path.addNode(Move.DOWN);
+            path.addNode(Move.RIGHT);
+            path.addNode(Move.RIGHT);
+            path.addNode(Move.RIGHT);
+            path.generateBranches(Arrays.asList(Move.UP, Move.DOWN));
+            path.nextBranch();
+            path.generateBranches(Arrays.asList(Move.LEFT, Move.RIGHT));
+        } catch (VisitedNodeException e) {
+            fail("Unexpected Exception");
+        }
         path.nextBranch();
         assertEquals(3, path.getTail().getPosX());
+        assertEquals(1, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(5, path.getTail().getPosX());
+        assertEquals(1, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(4, path.getTail().getPosX());
+        assertEquals(3, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(4, path.getTail().getPosX());
         assertEquals(2, path.getTail().getPosY());
         path.nextBranch();
-        assertEquals(3, path.getTail().getPosX());
-        assertEquals(4, path.getTail().getPosY());
-        path.nextBranch();
-        assertEquals(2, path.getTail().getPosX());
-        assertEquals(3, path.getTail().getPosY());
-        path.nextBranch();
-        assertEquals(4, path.getTail().getPosX());
-        assertEquals(3, path.getTail().getPosY());
-        path.nextBranch();
-        assertEquals(3, path.getTail().getPosX());
-        assertEquals(5, path.getTail().getPosY());
-        path.nextBranch();
-        assertEquals(2, path.getTail().getPosX());
-        assertEquals(4, path.getTail().getPosY());
-        path.nextBranch();
-        assertEquals(4, path.getTail().getPosX());
-        assertEquals(4, path.getTail().getPosY());
-        path.nextBranch();
+    }
+
+    @Test
+    public void testBranchingExceptions() {
+        path.addNode(Move.DOWN);
+        // 1st move in list is invalid
+        try {
+            path.generateBranches(Arrays.asList(Move.UP));
+            fail("Expected Exception");
+        } catch (VisitedNodeException e) {
+            assertEquals(2, path.getLength());
+        }
+        path.addNode(Move.RIGHT);
+        path.addNode(Move.DOWN);
+        path.addNode(Move.LEFT);
+
+        // 3rd Move in list is invalid
+        try {
+            path.generateBranches(Arrays.asList(Move.LEFT, Move.DOWN, Move.UP));
+            fail("Expected Exception");
+        } catch (VisitedNodeException e) {
+            assertEquals(5, path.getLength());
+        }
     }
 
     @Test
@@ -297,10 +350,25 @@ public class PathTest {
 
     @Test
     public void testGetNode() {
+        // Note: no try catch because IllegalArgument is a RuntimeException
         assertTrue(path.containsNode(1, 1));
         PathNode node = path.getNode(1, 1);
         assertNull(node.getDirection());
         assertTrue(node.equals(1, 1));
+    }
+
+    @Test
+    public void testGetNodeException() {
+        for (int i = 2; i < 10; i++) {
+            for (int j = 2; j < 10; j++) {
+                try {
+                    path.getNode(i, j);
+                    fail("Expected Exception");
+                } catch (IllegalArgumentException e) {
+                    // let test pass
+                }
+            }
+        }
     }
 
     @Test

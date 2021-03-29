@@ -2,14 +2,13 @@ package model;
 
 import model.generator.MazeGenerator;
 import model.maze.ImmutableMaze;
-import model.maze.Maze;
 import model.moveable.Move;
 import model.moveable.Player;
 import model.path.Path;
 import model.path.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.graphics.MazeGame;
+import ui.controller.MazeGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,6 @@
 package ui.graphics;
 
-import model.maze.Maze;
+import ui.controller.MazeGame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

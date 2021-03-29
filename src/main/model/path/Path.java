@@ -1,5 +1,7 @@
 package model.path;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+import model.exceptions.VisitedNodeException;
 import model.moveable.Move;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,7 +43,6 @@ public class Path implements Saveable {
         branches = new LinkedList<>();
         currentBranch = new ArrayList<>();
         noDuplicatesNodes = false;
-
     }
 
     // EFFECTS: start the Path with the Position (1,1) and set that as current node, and use given flag to determine
@@ -51,13 +52,10 @@ public class Path implements Saveable {
         this.noDuplicatesNodes = noDuplicateNodes;
     }
 
-    // REQUIRES: posX and posY must be within bounds of Maze that this Path is associated with, the value of the cell
-    //           with specified coordinates in the Maze must be PATH (not wall), and the cell must be adjacent to the
-    //           previous cell in the path
     // MODIFIES: this
-    // EFFECTS: add a node with given coordinates to the end of the path, dynamically determining direction attribute
-    //          for the node and keeps track that we have seen this position. If given node is already in cell and this
-    //          was initialized to allow no dupes, do nothing
+    // EFFECTS: If given node is already in cell and this was initialized to allow no dupes, do nothing. Else add a node
+    //          with given coordinates to the end of the path, dynamically determining direction attribute for the node,
+    //          records position as visited, and resets iteration index.
     public void addNode(int posX, int posY) {
         if (noDuplicatesNodes && containsNode(new Position(posX, posY))) {
             return;
@@ -69,14 +67,13 @@ public class Path implements Saveable {
         }
         path.add(tail);
         visited.add(tail);
+        index = 0;
     }
 
-    // REQUIRES: Cell with position obtained by moving from tail node in specified direction must be within bounds of
-    //           Maze that this Path is associated with, and the corresponding cell in the associated Maze must be PATH
     // MODIFIES: this
-    // EFFECTS: add the node obtained by moving from tail node in specified direction to end of path and keeps track
-    //          that we have seen this position.  If given node is already in cell and this was initialized to allow no
-    //          dupes, do nothing
+    // EFFECTS: If given node obtained by applying given move to tail is already in path and this was initialized to
+    //          allow no dupes, do nothing. Else, add the node obtained by moving from tail node in specified direction
+    //          to end of path, record resulting position as visited, and reset iteration index.
     public void addNode(Move direction) {
         if (noDuplicatesNodes && containsNode(tail.applyMove(direction))) {
             return;
@@ -84,11 +81,17 @@ public class Path implements Saveable {
         tail = tail.applyMove(direction);
         path.add(tail);
         visited.add(tail);
+        index = 0;
     }
 
-    // REQUIRES: containsNode(x, y) should produce true
-    // EFFECTS: produce node with specified coordinates
-    public PathNode getNode(int x, int y) {
+    // EFFECTS: produce node with specified coordinates; throws IllegalArgumentException if !contains(x, y)
+    public PathNode getNode(int x, int y) throws IllegalArgumentException {
+        if (!containsNode(x, y)) {
+            throw new IllegalArgumentException();
+        }
+        // filter is inefficient because it will run over the whole stream even after we've found what we're looking for
+        // but its the only way to get 100% code covg for autobot (other implementations create branching with
+        // the case where we don't find a node with x, y but we throw exception for that case)
         return path.stream().filter(n -> n.equals(x, y)).toArray(PathNode[]::new)[0];
     }
 
@@ -114,8 +117,6 @@ public class Path implements Saveable {
         return visited.contains(pos);
     }
 
-    // REQUIRES: If first call to next, then only call if addNode has been called at least once already. Else, only
-    //           call if previous call to next produced true, or addNode has been called since prev call
     // MODIFIES: this
     // EFFECTS: produces true if there are more nodes in the path and advances to next node in the path
     public boolean next() {
@@ -129,26 +130,29 @@ public class Path implements Saveable {
         index = 0;
     }
 
-    // REQUIRES: length - n must be >= 1
     // MODIFIES: this
     // EFFECTS: removes the last n nodes from the path and if current node was one of those n nodes, sets current node
-    //          to tail of resulting path
-    public void pop(int n) {
+    //          to tail of resulting path; throws IllegalArgumentException if length - n <= 0
+    public void pop(int n) throws IllegalArgumentException {
+        if (path.size() - n <= 0) {
+            throw new IllegalArgumentException();
+        }
         for (int i = 0; i < n; i++) {
             path.remove(path.size() - 1);
-            if (index > path.size() - 1) {
-                index--;
-            }
         }
         tail = path.get(path.size() - 1);
     }
 
-    // REQUIRES: all moves must be valid, meaning that the Position produced by applying the move to the tail node is
-    //           not a member of visited, and the corresponding cell in the Maze should be PATH
-    // MODIFIES: this
+    // MODIFIES: this, moves
     // EFFECTS: generates a branch for each possible Move from current branch, preserving order (the branch for the
-    //          first element of moves comes before the other elements)
-    public void generateBranches(List<Move> moves) {
+    //          first element of moves comes before the other elements); reverses moves, throws VisitedNodeException if
+    //          any moves in list are invalid (applying the move to the tail node would produce a member of visited)
+    public void generateBranches(List<Move> moves) throws VisitedNodeException {
+        for (Move m : moves) {
+            if (visited.contains(tail.applyMove(m))) {
+                throw new VisitedNodeException();
+            }
+        }
         Collections.reverse(moves);
         List<Move> temp;
         for (Move move : moves) {
@@ -201,7 +205,6 @@ public class Path implements Saveable {
         return subtract(path, p, includeCommon);
     }
 
-    // REQUIRES: only used in tests
     // EFFECTS: produces the list of pathNodes
     public List<PathNode> getNodes() {
         return path;

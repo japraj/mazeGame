@@ -18,7 +18,6 @@ public abstract class MazeSolver {
     protected ImmutableMaze maze;
     protected Path path;
 
-    // REQUIRES: can only be called within constructor
     // MODIFIES: this
     // EFFECTS: set maze to be solved and add path that the algorithm should use as base for solution
     //          (empty path indicates that the algorithm should start from top left)
@@ -43,10 +42,14 @@ public abstract class MazeSolver {
         return path;
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets the solver
     public void reset() {
         path = new Path();
     }
 
+    // EFFECTS: produces true if adding move to current path would not run us into a wall and would not take us to a
+    //          cell that has already been visited
     private boolean isValid(Move move) {
         // we don't need to check for index out of bounds because if the maze is generated properly, then it will be
         // surrounded by WALL and therefore the user cannot ever get to a cell such that they are one Move away
@@ -55,6 +58,7 @@ public abstract class MazeSolver {
         return maze.getCell(newPos) == Maze.PATH && !path.containsNode(newPos);
     }
 
+    // EFFECTS: produce a list of valid moves (that would not run us into a wall) from tail of current path
     protected List<Move> getValidMoves() {
         List<Move> moves = new ArrayList<>(2);
         for (Move move : MOVES) {

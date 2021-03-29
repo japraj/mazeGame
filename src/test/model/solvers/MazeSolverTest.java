@@ -5,7 +5,7 @@ import model.path.Path;
 import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.graphics.MazeGame;
+import ui.controller.MazeGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 

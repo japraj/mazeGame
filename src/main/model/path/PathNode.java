@@ -34,9 +34,8 @@ public class PathNode extends Position {
         return direction;
     }
 
-
-    @Override
     // EFFECTS: increment/decrement posX or posY depending on move (produces a new PathNode - does not modify this)
+    @Override
     public PathNode applyMove(Move direction) {
         return new PathNode(super.applyMove(direction), direction);
     }

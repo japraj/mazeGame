@@ -1,5 +1,6 @@
 package model.solver;
 
+import model.exceptions.VisitedNodeException;
 import model.maze.ImmutableMaze;
 import model.path.Path;
 
@@ -16,7 +17,12 @@ public class FirstPath extends MazeSolver {
     @Override
     public Path tick() {
         if (!isSolved()) {
-            path.generateBranches(getValidMoves()); // adds branches to path object, using current branch as foundation
+            try {
+                // adds branches to path object, using current branch as foundation
+                path.generateBranches(getValidMoves());
+            } catch (VisitedNodeException e) {
+                return path;
+            }
             path.nextBranch(); // moves to next branch
         }
         return path;

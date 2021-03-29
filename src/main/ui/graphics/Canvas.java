@@ -9,6 +9,7 @@ import model.path.PathEngine;
 import model.path.PathNode;
 import model.path.Position;
 import model.solver.MazeSolver;
+import ui.controller.MazeGame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

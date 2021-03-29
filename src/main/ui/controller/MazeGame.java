@@ -1,4 +1,4 @@
-package ui.graphics;
+package ui.controller;
 
 import model.generator.MazeGenerator;
 import model.maze.ImmutableMaze;
@@ -10,6 +10,8 @@ import model.solver.FirstPath;
 import model.solver.MazeSolver;
 import persistence.JsonReader;
 import persistence.JsonWriter;
+import ui.graphics.Canvas;
+import ui.graphics.ConfigPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +40,7 @@ public class MazeGame extends JFrame {
     // method Toolkit.getDefaultTookit() in the models package, so they have been moved here
     public static final int MAX_SIZE = Maze.floorOdd(
             Toolkit.getDefaultToolkit().getScreenSize().getHeight()
-                    / Canvas.CELL_LENGTH);
+                    / ui.graphics.Canvas.CELL_LENGTH);
     public static final int MIN_SIZE = 7;
 
     // models
@@ -50,7 +52,7 @@ public class MazeGame extends JFrame {
     private boolean blocked;
     // graphics
     private ConfigPanel config;
-    private Canvas canvas;
+    private ui.graphics.Canvas canvas;
 
     // Initializes app
     // EFFECTS: initialize simulation, configure window in which app is run and draws Maze on canvas
@@ -66,7 +68,7 @@ public class MazeGame extends JFrame {
 
         // set size and center window
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize((MAX_SIZE + 2) * Canvas.CELL_LENGTH + ConfigPanel.WIDTH, screen.height);
+        setSize((MAX_SIZE + 2) * ui.graphics.Canvas.CELL_LENGTH + ConfigPanel.WIDTH, screen.height);
         setLocation((screen.width - getWidth()) / 2, (screen.height - getHeight()) / 2);
 
         // init local vars
@@ -75,7 +77,7 @@ public class MazeGame extends JFrame {
         // initialize & add children JPanels
         setLayout(new FlowLayout(FlowLayout.LEFT));
         config = new ConfigPanel(this, screen.height, size);
-        canvas = new Canvas(screen);
+        canvas = new ui.graphics.Canvas(screen);
         add(config);
         add(canvas);
 

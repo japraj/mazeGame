@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import persistence.Saveable;
 
 // An entity that can move within a maze and keeps track of its path
-public class Player extends MoveableEntity implements Saveable {
+public class Player extends MoveableEntity {
 
     private Path path;
 
