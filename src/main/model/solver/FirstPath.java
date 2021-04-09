@@ -17,12 +17,8 @@ public class FirstPath extends MazeSolver {
     @Override
     public Path tick() {
         if (!isSolved()) {
-            try {
-                // adds branches to path object, using current branch as foundation
-                path.generateBranches(getValidMoves());
-            } catch (VisitedNodeException e) {
-                return path;
-            }
+            // adds branches to path object, using current branch as foundation
+            path.generateBranches(getValidMoves());
             path.nextBranch(); // moves to next branch
         }
         return path;

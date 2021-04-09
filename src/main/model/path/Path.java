@@ -144,12 +144,12 @@ public class Path implements Saveable {
 
     // MODIFIES: this, moves
     // EFFECTS: generates a branch for each possible Move from current branch, preserving order (the branch for the
-    //          first element of moves comes before the other elements); reverses moves, throws VisitedNodeException if
-    //          any moves in list are invalid (applying the move to the tail node would produce a member of visited)
-    public void generateBranches(List<Move> moves) throws VisitedNodeException {
+    //          first element of moves comes before the other elements); reverses moves, throws IllegalArgumentException
+    //          if any moves in list are invalid (applying the move to the tail node would produce a member of visited)
+    public void generateBranches(List<Move> moves) throws IllegalArgumentException {
         for (Move m : moves) {
             if (visited.contains(tail.applyMove(m))) {
-                throw new VisitedNodeException();
+                throw new IllegalArgumentException();
             }
         }
         Collections.reverse(moves);
