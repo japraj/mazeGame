@@ -37,7 +37,7 @@ public class PlayerTest {
         assertTrue(player.getPosition().equals(1, 1));
 
         // find a cell in the maze that can be moved into (either right or down)
-        Move next = maze.getCell(1, 2) ? Move.DOWN : Move.RIGHT;
+        Move next = maze.isPath(1, 2) ? Move.DOWN : Move.RIGHT;
         Path soln = new Path();
         soln.addNode(next);
 

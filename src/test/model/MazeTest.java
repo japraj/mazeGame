@@ -25,10 +25,10 @@ public class MazeTest {
 
         // test left/rightt col and top/bottom row
         for (int i = 0; i < SIZE; i++) {
-            assertEquals(Maze.WALL, maze.getCell(i, 0));
-            assertEquals(Maze.WALL, maze.getCell(0, i));
-            assertEquals(Maze.WALL, maze.getCell(i, SIZE - 1));
-            assertEquals(Maze.WALL, maze.getCell(SIZE - 1, i));
+            assertFalse(maze.isPath(i, 0));
+            assertFalse(maze.isPath(0, i));
+            assertFalse(maze.isPath(i, SIZE - 1));
+            assertFalse(maze.isPath(SIZE - 1, i));
         }
     }
 
@@ -39,7 +39,7 @@ public class MazeTest {
         Maze constructedMaze = new Maze(11, generatedMaze.toString());
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 7; x++) {
-                assertEquals(generatedMaze.getCell(x, y), constructedMaze.getCell(x, y));
+                assertEquals(generatedMaze.isPath(x, y), constructedMaze.isPath(x, y));
             }
         }
     }
@@ -48,15 +48,15 @@ public class MazeTest {
     public void testSetCell() {
         // set 1,1 true
         maze.setCell(1, 1, true);
-        assertTrue(maze.getCell(1, 1));
+        assertTrue(maze.isPath(1, 1));
         // set 1,1 false
         maze.setCell(1, 1, false);
-        assertFalse(maze.getCell(1, 1));
+        assertFalse(maze.isPath(1, 1));
         // set 1,2 true and 2,1 false
         maze.setCell(1, 2, true);
         maze.setCell(2, 1, false);
-        assertTrue(maze.getCell(1, 2));
-        assertFalse(maze.getCell(2, 1));
+        assertTrue(maze.isPath(1, 2));
+        assertFalse(maze.isPath(2, 1));
     }
 
     @Test

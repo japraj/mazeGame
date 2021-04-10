@@ -10,10 +10,10 @@ public interface ImmutableMaze extends Saveable {
     int getSize();
 
     // REQUIRES: x and y must be in the range [0, size - 1]
-    // EFFECTS: produce the value of the cell with given indices in the maze
-    boolean getCell(int x, int y);
+    // EFFECTS: produce true if cell with given indices in the maze is PATH
+    boolean isPath(int x, int y);
 
     // REQUIRES: posX and posY must be in the range [0, size - 1]
-    // EFFECTS: produce the value of the cell with given position in the maze
-    boolean getCell(Position pos);
+    // EFFECTS: produce true if the cell with given position in the maze is PATH
+    boolean isPath(Position pos);
 }

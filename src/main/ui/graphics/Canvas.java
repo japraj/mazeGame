@@ -1,7 +1,6 @@
 package ui.graphics;
 
 import model.maze.ImmutableMaze;
-import model.maze.Maze;
 import model.moveable.Move;
 import model.moveable.Player;
 import model.path.Path;
@@ -61,7 +60,7 @@ public class Canvas extends JPanel {
         int cornerY = CELL_LENGTH;
         for (int y = 1; y < size - 1; y++) {
             for (int x = 1; x < size - 1; x++) {
-                if (maze.getCell(x, y) == Maze.PATH) {
+                if (maze.isPath(x, y)) {
                     g.fillRect(cornerX, cornerY, CELL_LENGTH, CELL_LENGTH);
                 }
                 cornerX += CELL_LENGTH;

@@ -1,7 +1,6 @@
 package model.solver;
 
 import model.maze.ImmutableMaze;
-import model.maze.Maze;
 import model.moveable.Move;
 import model.path.Path;
 import model.path.Position;
@@ -55,7 +54,7 @@ public abstract class MazeSolver {
         // surrounded by WALL and therefore the user cannot ever get to a cell such that they are one Move away
         // from index out of bounds
         Position newPos = path.getTail().applyMove(move);
-        return maze.getCell(newPos) == Maze.PATH && !path.containsNode(newPos);
+        return maze.isPath(newPos) && !path.containsNode(newPos);
     }
 
     // EFFECTS: produce a list of valid moves (that would not run us into a wall) from tail of current path

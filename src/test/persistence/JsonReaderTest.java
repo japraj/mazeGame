@@ -34,7 +34,7 @@ public class JsonReaderTest {
         assertEquals(7, maze.getSize());
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 7; x++) {
-                assertEquals(mazeCompare.getCell(x, y), maze.getCell(x, y));
+                assertEquals(mazeCompare.isPath(x, y), maze.isPath(x, y));
             }
         }
         Player player = jsonReader.readPlayer(maze);

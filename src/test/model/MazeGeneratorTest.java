@@ -27,10 +27,10 @@ public class MazeGeneratorTest {
     @Test
     public void testUntouchedSurroundings() {
         for (int i = 0; i < Maze.MIN_SIZE; i++) {
-            assertEquals(Maze.WALL, maze.getCell(i, 0));
-            assertEquals(Maze.WALL, maze.getCell(0, i));
-            assertEquals(Maze.WALL, maze.getCell(i, Maze.MIN_SIZE - 1));
-            assertEquals(Maze.WALL, maze.getCell(Maze.MIN_SIZE - 1, i));
+            assertFalse(maze.isPath(i, 0));
+            assertFalse(maze.isPath(0, i));
+            assertFalse(maze.isPath(i, Maze.MIN_SIZE - 1));
+            assertFalse(maze.isPath(Maze.MIN_SIZE - 1, i));
         }
     }
 
@@ -44,7 +44,7 @@ public class MazeGeneratorTest {
         int wallCounter = 0;
         for (int i = 0; i < Maze.MIN_SIZE; i++) {
             for (int j = 0; j < Maze.MIN_SIZE; j++) {
-                if (maze.getCell(i, j) == Maze.PATH) {
+                if (maze.isPath(i, j)) {
                     pathCounter++;
                 } else {
                     wallCounter++;

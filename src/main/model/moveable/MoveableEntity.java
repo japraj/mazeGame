@@ -1,7 +1,6 @@
 package model.moveable;
 
 import model.maze.ImmutableMaze;
-import model.maze.Maze;
 import model.path.Position;
 import org.json.JSONObject;
 import persistence.Saveable;
@@ -21,7 +20,7 @@ public abstract class MoveableEntity implements Saveable {
 
     // EFFECTS: produce true if applying given move does not run this entity into a wall
     protected boolean isValid(Move move) {
-        return maze.getCell(position.applyMove(move)) == Maze.PATH;
+        return maze.isPath(position.applyMove(move));
     }
 
     // MODIFIES: this

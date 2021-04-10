@@ -58,14 +58,14 @@ public class Maze implements ImmutableMaze {
     // REQUIRES: x and y must be in the range [0, size - 1]
     // EFFECTS: produce the value of the cell with given indices in the maze
     @Override
-    public boolean getCell(int x, int y) {
+    public boolean isPath(int x, int y) {
         return maze[y][x];
     }
 
     // REQUIRES: posX and posY must be in the range [0, size - 1]
     // EFFECTS: produce the value of the cell with given position in the maze
     @Override
-    public boolean getCell(Position pos) {
+    public boolean isPath(Position pos) {
         return maze[pos.getPosY()][pos.getPosX()];
     }
 
