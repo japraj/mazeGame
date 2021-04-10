@@ -5,14 +5,13 @@ import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.controller.MazeGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MazeTest {
 
     private Maze maze;
-    private static final int SIZE = MazeGame.MIN_SIZE;
+    private static final int SIZE = Maze.MIN_SIZE;
 
     @BeforeEach
     public void setup() {

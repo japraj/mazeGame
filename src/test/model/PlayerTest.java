@@ -2,20 +2,20 @@ package model;
 
 import model.generator.MazeGenerator;
 import model.maze.ImmutableMaze;
+import model.maze.Maze;
 import model.moveable.Move;
 import model.moveable.Player;
 import model.path.Path;
 import model.path.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.controller.MazeGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
 
     private Player player;
-    private final ImmutableMaze maze = new MazeGenerator(MazeGame.MIN_SIZE).generateMaze();
+    private final ImmutableMaze maze = new MazeGenerator(Maze.MIN_SIZE).generateMaze();
 
     @BeforeEach
     public void setup() {

@@ -5,9 +5,9 @@ import model.path.Path;
 import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.controller.MazeGame;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public abstract class MazeSolverTest {
     // This test suite is intended to provide a baseline for all MazeSolver implementations - it only tests that the
@@ -24,7 +24,7 @@ public abstract class MazeSolverTest {
 
     @BeforeEach
     public void setup() {
-        maze = new Maze(MazeGame.MIN_SIZE);
+        maze = new Maze(Maze.MIN_SIZE);
     }
 
 
@@ -44,13 +44,13 @@ public abstract class MazeSolverTest {
         // initialize a maze that has a single solution starting at 1,1 going all the way down, and the going all the
         // way to the right (like an L shape), and build up a solution path for comparison simultaneously
         Path solution = new Path(true);
-        for (int y = 1; y < MazeGame.MIN_SIZE - 1; y++) {
+        for (int y = 1; y < Maze.MIN_SIZE - 1; y++) {
             maze.setCell(1, y, Maze.PATH);
             solution.addNode(1, y);
         }
-        for (int x = 1; x < MazeGame.MIN_SIZE - 1; x++) {
-            maze.setCell(x, MazeGame.MIN_SIZE - 2, Maze.PATH);
-            solution.addNode(x, MazeGame.MIN_SIZE - 2);
+        for (int x = 1; x < Maze.MIN_SIZE - 1; x++) {
+            maze.setCell(x, Maze.MIN_SIZE - 2, Maze.PATH);
+            solution.addNode(x, Maze.MIN_SIZE - 2);
         }
 
         Path initPath = new Path();
@@ -85,24 +85,24 @@ public abstract class MazeSolverTest {
 
         // init the maze to look like above, and build the solution paths (need 2 loops so we can sequentially build the
         // Path variables - the maze itself could actually be done with a single loop)
-        for (int i = 1; i < MazeGame.MIN_SIZE - 1; i++) {
+        for (int i = 1; i < Maze.MIN_SIZE - 1; i++) {
             maze.setCell(1, i, Maze.PATH);
             solutionLower.addNode(1, i);
 
             maze.setCell(i, 1, Maze.PATH);
             solutionUpper.addNode(i, 1);
         }
-        for (int i = 1; i < MazeGame.MIN_SIZE - 1; i++) {
-            maze.setCell(i, MazeGame.MIN_SIZE - 2, Maze.PATH);
-            solutionLower.addNode(i, MazeGame.MIN_SIZE - 2);
+        for (int i = 1; i < Maze.MIN_SIZE - 1; i++) {
+            maze.setCell(i, Maze.MIN_SIZE - 2, Maze.PATH);
+            solutionLower.addNode(i, Maze.MIN_SIZE - 2);
 
-            maze.setCell(MazeGame.MIN_SIZE - 2, i, Maze.PATH);
-            solutionUpper.addNode(MazeGame.MIN_SIZE - 2, i);
+            maze.setCell(Maze.MIN_SIZE - 2, i, Maze.PATH);
+            solutionUpper.addNode(Maze.MIN_SIZE - 2, i);
         }
 
         // block the bottom path, so the upper path is the only valid solution
-        int blockCoord = MazeGame.MIN_SIZE - 3;
-        maze.setCell(blockCoord, MazeGame.MIN_SIZE - 2, Maze.WALL);
+        int blockCoord = Maze.MIN_SIZE - 3;
+        maze.setCell(blockCoord, Maze.MIN_SIZE - 2, Maze.WALL);
 
         init();
         tickSolver(150);
@@ -110,8 +110,8 @@ public abstract class MazeSolverTest {
 
         // reset solver, block the upper path, and unblock the lower path, so the lower path is the only valid solution
         solver.reset();
-        maze.setCell(blockCoord, MazeGame.MIN_SIZE - 2, Maze.PATH);
-        maze.setCell(MazeGame.MIN_SIZE - 2, blockCoord, Maze.WALL);
+        maze.setCell(blockCoord, Maze.MIN_SIZE - 2, Maze.PATH);
+        maze.setCell(Maze.MIN_SIZE - 2, blockCoord, Maze.WALL);
         tickSolver(150);
         assertEquals(solutionLower, solver.getPath());
     }
@@ -131,8 +131,8 @@ public abstract class MazeSolverTest {
          */
 
         // clear all walls (except surrounding walls)
-        for (int y = 1; y < MazeGame.MIN_SIZE - 1; y++) {
-            for (int x = 1; x < MazeGame.MIN_SIZE - 1; x++) {
+        for (int y = 1; y < Maze.MIN_SIZE - 1; y++) {
+            for (int x = 1; x < Maze.MIN_SIZE - 1; x++) {
                 maze.setCell(x, y, Maze.PATH);
             }
         }

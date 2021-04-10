@@ -8,7 +8,6 @@ import model.solver.FirstPath;
 import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.controller.MazeGame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,17 +20,17 @@ public class MazeGeneratorTest {
 
     @BeforeEach
     public void setup() {
-        mazeGenerator = new MazeGenerator(MazeGame.MIN_SIZE);
+        mazeGenerator = new MazeGenerator(Maze.MIN_SIZE);
         maze = mazeGenerator.generateMaze();
     }
 
     @Test
     public void testUntouchedSurroundings() {
-        for (int i = 0; i < MazeGame.MIN_SIZE; i++) {
+        for (int i = 0; i < Maze.MIN_SIZE; i++) {
             assertEquals(Maze.WALL, maze.getCell(i, 0));
             assertEquals(Maze.WALL, maze.getCell(0, i));
-            assertEquals(Maze.WALL, maze.getCell(i, MazeGame.MIN_SIZE - 1));
-            assertEquals(Maze.WALL, maze.getCell(MazeGame.MIN_SIZE - 1, i));
+            assertEquals(Maze.WALL, maze.getCell(i, Maze.MIN_SIZE - 1));
+            assertEquals(Maze.WALL, maze.getCell(Maze.MIN_SIZE - 1, i));
         }
     }
 
@@ -43,8 +42,8 @@ public class MazeGeneratorTest {
         // because area (# cells) increases quadratically w/ size)
         int pathCounter = 0;
         int wallCounter = 0;
-        for (int i = 0; i < MazeGame.MIN_SIZE; i++) {
-            for (int j = 0; j < MazeGame.MIN_SIZE; j++) {
+        for (int i = 0; i < Maze.MIN_SIZE; i++) {
+            for (int j = 0; j < Maze.MIN_SIZE; j++) {
                 if (maze.getCell(i, j) == Maze.PATH) {
                     pathCounter++;
                 } else {
@@ -52,13 +51,13 @@ public class MazeGeneratorTest {
                 }
             }
         }
-        assertTrue(pathCounter > MazeGame.MIN_SIZE);
-        assertTrue(wallCounter > MazeGame.MIN_SIZE);
+        assertTrue(pathCounter > Maze.MIN_SIZE);
+        assertTrue(wallCounter > Maze.MIN_SIZE);
     }
 
     @Test
     public void testSingleSolve() {
-        maze = mazeGenerator.generateMaze(MazeGame.MIN_SIZE * 2 - 1);
+        maze = mazeGenerator.generateMaze(Maze.MIN_SIZE * 2 - 1);
         MazeSolver solver = new FirstPath(maze, new Path());
         int ticks = 0;
         while (!solver.isSolved() && ticks < MAX_TICKS) {
@@ -75,7 +74,7 @@ public class MazeGeneratorTest {
         // test several times to make sure the generator doesn't just get lucky!
         MazeSolver solver;
         int ticks;
-        int size = Maze.floorOdd((MazeGame.MIN_SIZE + MazeGame.MAX_SIZE) / 2);
+        int size = Maze.floorOdd((Maze.MIN_SIZE + Maze.MAX_SIZE) / 2);
         // large number to make sure it is given ample chance to solve - if the solver and maze generator both work
         // properly, the test's execution time will be much shorter
         for (int i = 0; i < 50; i++) {

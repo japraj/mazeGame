@@ -1,5 +1,6 @@
 package ui.graphics;
 
+import model.maze.Maze;
 import ui.controller.MazeGame;
 
 import javax.swing.*;
@@ -62,7 +63,7 @@ public class ConfigPanel extends JPanel {
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 1;
-        sizeSpinner = new JSpinner(new SpinnerNumberModel(size, MazeGame.MIN_SIZE, MazeGame.MAX_SIZE, 2));
+        sizeSpinner = new JSpinner(new SpinnerNumberModel(size, Maze.MIN_SIZE, Maze.MAX_SIZE, 2));
         addLabelledComponent(genPanel, sizeSpinner, "Size: ", c);
         sizeSpinner.setFocusable(false);
         JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) sizeSpinner.getEditor();

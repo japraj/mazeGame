@@ -36,13 +36,6 @@ public class MazeGame extends JFrame {
     private static final String DATA = "./data/state.json";
     private static final int INTERVAL = 33;
 
-    // These constants technically belong in Maze.java, but autobot breaks due to the call to the static swing
-    // method Toolkit.getDefaultTookit() in the models package, so they have been moved here
-    public static final int MAX_SIZE = Maze.floorOdd(
-            Toolkit.getDefaultToolkit().getScreenSize().getHeight()
-                    / ui.graphics.Canvas.CELL_LENGTH);
-    public static final int MIN_SIZE = 7;
-
     // models
     private MazeGenerator mazeGenerator;
     private int size;
@@ -68,7 +61,7 @@ public class MazeGame extends JFrame {
 
         // set size and center window
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize((MAX_SIZE + 2) * ui.graphics.Canvas.CELL_LENGTH + ConfigPanel.WIDTH, screen.height);
+        setSize((Maze.MAX_SIZE + 2) * ui.graphics.Canvas.CELL_LENGTH + ConfigPanel.WIDTH, screen.height);
         setLocation((screen.width - getWidth()) / 2, (screen.height - getHeight()) / 2);
 
         // init local vars
@@ -107,7 +100,7 @@ public class MazeGame extends JFrame {
         try {
             load(false);
         } catch (Exception e) {
-            size = MIN_SIZE;
+            size = Maze.MIN_SIZE;
             mazeGenerator = new MazeGenerator(size);
             maze = mazeGenerator.generateMaze();
             player = new Player(maze);
@@ -123,7 +116,7 @@ public class MazeGame extends JFrame {
 
         maze = jsonReader.readMaze();
         size = maze.getSize();
-        if (size > MAX_SIZE) {
+        if (size > Maze.MAX_SIZE) {
             throw new IllegalStateException("Maze size out of bounds");
         }
         mazeGenerator = new MazeGenerator(size);
@@ -198,10 +191,10 @@ public class MazeGame extends JFrame {
     //          a maze of size
     public void generateNewMaze(int size) {
         // set size
-        if (size < MIN_SIZE) {
-            size = MIN_SIZE;
-        } else if (size > MAX_SIZE) {
-            size = MAX_SIZE;
+        if (size < Maze.MIN_SIZE) {
+            size = Maze.MIN_SIZE;
+        } else if (size > Maze.MAX_SIZE) {
+            size = Maze.MAX_SIZE;
         }
         this.size = size % 2 == 1 ? size : size + 1;
         // generate maze and update refs
