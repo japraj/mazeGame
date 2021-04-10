@@ -1,6 +1,5 @@
 package model.solver;
 
-import model.exceptions.VisitedNodeException;
 import model.maze.ImmutableMaze;
 import model.path.Path;
 

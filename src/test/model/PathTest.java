@@ -1,6 +1,5 @@
 package model;
 
-import model.exceptions.VisitedNodeException;
 import model.moveable.Move;
 import model.path.Path;
 import model.path.PathNode;
@@ -8,7 +7,9 @@ import model.path.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,9 +25,9 @@ public class PathTest {
 
     @Test
     public void testConstructor() {
-        assertEquals(1, path.getPosition().getPosX());
-        assertEquals(1, path.getPosition().getPosY());
-        assertNull(path.getDirection());
+        PathNode tail = path.getTail();
+        assertEquals(new Position(1, 1), tail);
+        assertNull(tail.getDirection());
     }
 
     @Test
@@ -36,110 +37,92 @@ public class PathTest {
         path.addNode(2, 1);
         path.addNode(1, 1);
 
-        assertTrue(path.next());
-        assertEquals(1, path.getPosition().getPosX());
-        assertEquals(2, path.getPosition().getPosY());
-        assertEquals(Move.DOWN, path.getDirection());
+        Iterator<PathNode> iter = path.iterator();
 
-        assertTrue(path.next());
-        assertEquals(2, path.getPosition().getPosX());
-        assertEquals(2, path.getPosition().getPosY());
-        assertEquals(Move.RIGHT, path.getDirection());
+        assertTrue(iter.hasNext());
+        PathNode node = iter.next();
+        assertEquals(new Position(1, 1), node);
+        assertNull(node.getDirection());
+
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(1, 2), node);
+        assertEquals(Move.DOWN, node.getDirection());
+
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(2, 2), node);
+        assertEquals(Move.RIGHT, node.getDirection());
 
 
-        assertTrue(path.next());
-        assertEquals(2, path.getPosition().getPosX());
-        assertEquals(1, path.getPosition().getPosY());
-        assertEquals(Move.UP, path.getDirection());
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(2, 1), node);
+        assertEquals(Move.UP, node.getDirection());
 
-        assertFalse(path.next());
-        assertEquals(1, path.getPosition().getPosX());
-        assertEquals(1, path.getPosition().getPosY());
-        assertEquals(Move.LEFT, path.getDirection());
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(1, 1), node);
+        assertEquals(Move.LEFT, node.getDirection());
+
+        assertFalse(iter.hasNext());
     }
 
     @Test
     public void testAddNodeMove() {
         // populate path
+        path.addNode(Move.DOWN);
         path.addNode(Move.RIGHT);
-        path.addNode(Move.DOWN);
-        path.addNode(Move.LEFT);
         path.addNode(Move.UP);
+        path.addNode(Move.LEFT);
 
-        path.next();
-        assertEquals(2, path.getPosition().getPosX());
-        assertEquals(1, path.getPosition().getPosY());
-        assertEquals(Move.RIGHT, path.getDirection());
 
-        path.next();
-        assertEquals(2, path.getPosition().getPosX());
-        assertEquals(2, path.getPosition().getPosY());
-        assertEquals(Move.DOWN, path.getDirection());
+        Iterator<PathNode> iter = path.iterator();
 
-        path.next();
-        assertEquals(1, path.getPosition().getPosX());
-        assertEquals(2, path.getPosition().getPosY());
-        assertEquals(Move.LEFT, path.getDirection());
+        assertTrue(iter.hasNext());
+        PathNode node = iter.next();
+        assertEquals(new Position(1, 1), node);
+        assertNull(node.getDirection());
 
-        path.next();
-        assertEquals(1, path.getPosition().getPosX());
-        assertEquals(1, path.getPosition().getPosY());
-        assertEquals(Move.UP, path.getDirection());
-    }
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(1, 2), node);
+        assertEquals(Move.DOWN, node.getDirection());
 
-    @Test
-    public void testAddNodeResetIndex() {
-        for (int i = 0; i < 5; i++) {
-            path.next();
-        }
-        path.addNode(Move.DOWN);
-        // if below condition is satisfied then index mustve been reset
-        assertEquals(new Position(1, 1), path.getPosition());
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(2, 2), node);
+        assertEquals(Move.RIGHT, node.getDirection());
 
-        // test overload too
-        for (int i = 0; i < 5; i++) {
-            path.next();
-        }
-        path.addNode(3, 4);
-        assertEquals(new Position(1, 1), path.getPosition());
+
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(2, 1), node);
+        assertEquals(Move.UP, node.getDirection());
+
+        assertTrue(iter.hasNext());
+        node = iter.next();
+        assertEquals(new Position(1, 1), node);
+        assertEquals(Move.LEFT, node.getDirection());
+
+        assertFalse(iter.hasNext());
     }
 
     @Test
     public void testTailPop() {
-        // Note: no try catch because IllegalArgument is a RuntimeException
-
         // populate path
         path.addNode(1, 2);
         path.addNode(1, 3);
         path.addNode(2, 3);
 
-        // check tail
-        assertEquals(3, path.getTail().getPosY());
-        assertEquals(2, path.getTail().getPosX());
-
-        // move index
-        assertTrue(path.next());
-        assertTrue(path.next());
-        assertFalse(path.next());
-
-        // check tail
-        assertEquals(path.getPosition(), path.getTail());
-
-        // add node and check tail
-        path.addNode(2, 4);
-        assertEquals(2, path.getTail().getPosX());
-        assertEquals(4, path.getTail().getPosY());
-
         // test single pop
         path.pop(1);
         // check tail
-        assertEquals(3, path.getTail().getPosY());
-        assertEquals(2, path.getTail().getPosX());
+        assertEquals(new Position(1, 3), path.getTail());
 
         // test multiple pop
-        path.pop(3);
-        assertEquals(1, path.getTail().getPosY());
-        assertEquals(1, path.getTail().getPosX());
+        path.pop(2);
+        assertEquals(new Position(1, 1), path.getTail());
     }
 
     @Test
@@ -156,39 +139,19 @@ public class PathTest {
 
     @Test
     public void testIteration() {
-        path.addNode(1, 2);
-        path.addNode(1, 3);
-        path.addNode(1, 4);
-        path.addNode(1, 5);
-        path.addNode(1, 6);
-
-        int i = 2;
-        while(path.next()) {
-            assertEquals(1, path.getPosition().getPosX());
-            assertEquals(i, path.getPosition().getPosY());
-            if (i == 1) {
-                assertNull(path.getDirection());
-            } else {
-                assertEquals(Move.DOWN, path.getDirection());
-            }
-            i++;
+        List<Position> posList = new ArrayList<>();
+        posList.add(new Position(1, 1));
+        for (int i = 2; i <= 6; i++) {
+            posList.add(new Position(1, i));
+            path.addNode(1, i);
         }
-        assertEquals(6, i);
 
-        path.reset();
+        Iterator<PathNode> iter = path.iterator();
 
-        i = 2;
-        while(path.next()) {
-            assertEquals(1, path.getPosition().getPosX());
-            assertEquals(i, path.getPosition().getPosY());
-            if (i == 1) {
-                assertNull(path.getDirection());
-            } else {
-                assertEquals(Move.DOWN, path.getDirection());
-            }
-            i++;
+        for (Position p : posList) {
+            assertEquals(p, iter.next());
         }
-        assertEquals(6, i);
+        assertFalse(iter.hasNext());
     }
 
     @Test

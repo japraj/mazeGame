@@ -1,6 +1,5 @@
 package model.path;
 
-import model.exceptions.VisitedNodeException;
 import model.moveable.Move;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,12 +8,10 @@ import persistence.Saveable;
 import java.util.*;
 
 // A Path in a Maze; always starts with the PathNode (1,1, null)
-public class Path implements Saveable {
+public class Path implements Saveable, Iterable<PathNode> {
 
-    private List<PathNode> path;
-    private PathNode tail;
+    private Stack<PathNode> path;
     private Set<Position> visited;
-    private int index;
     private LinkedList<List<Move>> branches; // declare as LinkedList so we can access subclass methods
     private List<Move> currentBranch;
     private boolean noDuplicatesNodes;
@@ -22,12 +19,12 @@ public class Path implements Saveable {
     // EFFECTS: start the Path with the Position (1,1) and set that as current node; allows dupes, has no branches, and
     //          has default index
     public Path() {
-        path = new ArrayList<>();
-        tail = new PathNode(1, 1, null);
-        path.add(tail);
+        PathNode origin = new PathNode(1, 1, null);
+
+        path = new Stack<>();
+        path.add(origin);
         visited = new HashSet<>();
-        visited.add(tail);
-        index = 0;
+        visited.add(origin);
         branches = new LinkedList<>();
         currentBranch = new ArrayList<>();
         noDuplicatesNodes = false;
@@ -35,10 +32,9 @@ public class Path implements Saveable {
 
     // EFFECTS: creates a Path with given pathNodes and visited; allows dupes, has no branches, and default index
     public Path(List<PathNode> path, Set<Position> visited) {
-        this.path = path;
-        tail = path.get(path.size() - 1);
+        this.path = new Stack<>();
+        this.path.addAll(path);
         this.visited = visited;
-        index = 0;
         branches = new LinkedList<>();
         currentBranch = new ArrayList<>();
         noDuplicatesNodes = false;
@@ -52,13 +48,14 @@ public class Path implements Saveable {
     }
 
     // MODIFIES: this
-    // EFFECTS: If given node is already in cell and this was initialized to allow no dupes, do nothing. Else add a node
-    //          with given coordinates to the end of the path, dynamically determining direction attribute for the node,
-    //          records position as visited, and resets iteration index.
+    // EFFECTS: If node (x, y) is already in Path and this was initialized to prohibit duplicates, do nothing. Else add
+    //          node (x, y) to the end of the path, dynamically determining direction attribute for the node, and
+    //          recording position as visited
     public void addNode(int posX, int posY) {
         if (noDuplicatesNodes && containsNode(new Position(posX, posY))) {
             return;
         }
+        PathNode tail = path.peek();
         if (tail.getPosX() == posX) {
             tail = new PathNode(posX, posY, posY < tail.getPosY() ? Move.UP : Move.DOWN);
         } else {
@@ -66,7 +63,6 @@ public class Path implements Saveable {
         }
         path.add(tail);
         visited.add(tail);
-        index = 0;
     }
 
     // MODIFIES: this
@@ -74,13 +70,12 @@ public class Path implements Saveable {
     //          allow no dupes, do nothing. Else, add the node obtained by moving from tail node in specified direction
     //          to end of path, record resulting position as visited, and reset iteration index.
     public void addNode(Move direction) {
-        if (noDuplicatesNodes && containsNode(tail.applyMove(direction))) {
+        if (noDuplicatesNodes && containsNode(path.peek().applyMove(direction))) {
             return;
         }
-        tail = tail.applyMove(direction);
+        PathNode tail = path.peek().applyMove(direction);
         path.add(tail);
         visited.add(tail);
-        index = 0;
     }
 
     // EFFECTS: produce node with specified coordinates; throws IllegalArgumentException if !contains(x, y)
@@ -117,19 +112,6 @@ public class Path implements Saveable {
     }
 
     // MODIFIES: this
-    // EFFECTS: produces true if there are more nodes in the path and advances to next node in the path
-    public boolean next() {
-        index++;
-        return index + 1 < path.size();
-    }
-
-    // MODIFIES: this
-    // EFFECTS: go back to first node in the path
-    public void reset() {
-        index = 0;
-    }
-
-    // MODIFIES: this
     // EFFECTS: removes the last n nodes from the path and if current node was one of those n nodes, sets current node
     //          to tail of resulting path; throws IllegalArgumentException if length - n <= 0
     public void pop(int n) throws IllegalArgumentException {
@@ -137,9 +119,8 @@ public class Path implements Saveable {
             throw new IllegalArgumentException();
         }
         for (int i = 0; i < n; i++) {
-            path.remove(path.size() - 1);
+            path.pop();
         }
-        tail = path.get(path.size() - 1);
     }
 
     // MODIFIES: this, moves
@@ -148,7 +129,7 @@ public class Path implements Saveable {
     //          if any moves in list are invalid (applying the move to the tail node would produce a member of visited)
     public void generateBranches(List<Move> moves) throws IllegalArgumentException {
         for (Move m : moves) {
-            if (visited.contains(tail.applyMove(m))) {
+            if (visited.contains(path.peek().applyMove(m))) {
                 throw new IllegalArgumentException();
             }
         }
@@ -219,35 +200,25 @@ public class Path implements Saveable {
 
         // guard clause - if they are of different lengths or end in different places, then they cannot be equal
         Path path = (Path) o;
-        if (this.getLength() != path.getLength() || !tail.equals(path.getTail())) {
+        if (this.getLength() != path.getLength() || !this.path.peek().equals(path.getTail())) {
             return false;
         }
 
         Position pos;
+        Iterator<PathNode> pathIter = path.iterator();
         for (PathNode pathNode : this.path) {
-            pos = path.getPosition();
+            pos = pathIter.next();
             if (pos.getPosX() != pathNode.getPosX() || pos.getPosY() != pathNode.getPosY()) {
                 return false;
             }
-            path.next();
         }
 
         return true;
     }
 
-    // EFFECTS: produce position of current node in the path
-    public Position getPosition() {
-        return path.get(index);
-    }
-
-    // EFFECTS: produce direction travelled from previous node to get to current one
-    public Move getDirection() {
-        return path.get(index).getDirection();
-    }
-
     // EFFECTS: produces the position of the last node in the path
     public PathNode getTail() {
-        return tail;
+        return path.peek();
     }
 
     // EFFECTS: produce length of this
@@ -273,6 +244,12 @@ public class Path implements Saveable {
         obj.put("visited", arr);
 
         return obj;
+    }
+
+    // EFFECTS: returns an iterator for this
+    @Override
+    public Iterator<PathNode> iterator() {
+        return path.iterator();
     }
 
 }

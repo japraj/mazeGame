@@ -44,8 +44,8 @@ public class PathEngineTest {
         List<PathNode> toPlace = engine.getToPlace();
         assertTrue(toWipe.isEmpty());
         assertEquals(5, toPlace.size());
-        while (branch1.next()) {
-            assertTrue(toPlace.contains(branch1.getPosition()));
+        for (PathNode p : branch1) {
+            assertTrue(toPlace.contains(p));
         }
 
         // add second branch to the engine; we want that the engine tells us to wipe 2 nodes, and that it tells us to
