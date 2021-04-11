@@ -1,12 +1,14 @@
 package model.generator;
 
-import jdk.nashorn.internal.codegen.CompilerConstants;
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.moveable.Move;
 import model.path.Position;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Stack;
 import java.util.stream.Stream;
 
 // Generates randomized Mazes of arbitrary size
@@ -55,7 +57,7 @@ public class MazeGenerator {
     }
 
     // MODIFIES: this
-    // EFFECTS: produce a square maze with specified side-length
+    // EFFECTS: produce a square maze with most recently specified side-length
     public ImmutableMaze generateMaze() {
         // This is an iterative implementation of the randomized depth-first search maze generation algorithm from
         // Wikipedia: https://en.wikipedia.org/wiki/Maze_generation_algorithm
@@ -108,6 +110,15 @@ public class MazeGenerator {
         } else {
             return origin.applyMove(origin.getPosY() - destination.getPosY() < 0 ? Move.DOWN : Move.UP);
         }
+    }
+
+    // EFFECTS: produce a new maze with WALL border and PATH in all cells that are not on the border
+    public static Maze generateBlankMaze(int size) {
+        Maze maze = new Maze(size);
+        for (int y = 1; y < size - 1; y++)
+            for (int x = 1; x < size - 1; x++)
+                maze.setCell(x, y, Maze.PATH);
+        return maze;
     }
 
 }

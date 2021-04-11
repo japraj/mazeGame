@@ -27,8 +27,7 @@ public class Maze implements ImmutableMaze {
     private boolean[][] maze;
 
     // REQUIRES: size must be odd and in the range [MazeGame.MIN_SIZE, MazeGame.MAX_SIZE]
-    // EFFECTS: set the size of this maze and initialize the maze so that the top/bottom rows and left-most/right-most
-    // columns are WALL
+    // EFFECTS: set the size of this maze and initialize the maze full of WALL
     public Maze(int size) {
         size = floorOdd(size);
         maze = new boolean[size][size];

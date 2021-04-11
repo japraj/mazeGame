@@ -93,18 +93,14 @@ public class MazeGame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: initialize simulator; try to load from data file and if that fails, use default values
+    // EFFECTS: initialize simulator with default values
     private void init() {
         blocked = false;
-        try {
-            load(false);
-        } catch (Exception e) {
-            size = Maze.MIN_SIZE;
-            mazeGenerator = new MazeGenerator(size);
-            maze = mazeGenerator.generateMaze();
-            player = new Player(maze);
-            solver = new FirstPath(maze);
-        }
+        size = Maze.MIN_SIZE;
+        mazeGenerator = new MazeGenerator(size);
+        maze = MazeGenerator.generateBlankMaze(size);
+        player = new Player(maze);
+        solver = new FirstPath(maze);
     }
 
     // MODIFIES: this
@@ -163,9 +159,11 @@ public class MazeGame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: resets player, repaints canvas
+    // EFFECTS: resets player, makes blank maze, repaints canvas
     public void reset() {
+        maze = MazeGenerator.generateBlankMaze(size);
         player = new Player(maze);
+        solver = new FirstPath(maze);
         blocked = false;
         drawCanvas();
     }
@@ -198,7 +196,9 @@ public class MazeGame extends JFrame {
         // generate maze and update refs
         maze = mazeGenerator.generateMaze(size);
         solver = new FirstPath(maze);
-        reset();
+        player = new Player(maze);
+        blocked = false;
+        drawCanvas();
     }
 
     // MODIFIES: this

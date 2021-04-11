@@ -93,4 +93,18 @@ public class MazeGeneratorTest {
             }
         }
     }
+
+    @Test
+    public void testBlankGeneration() {
+        ImmutableMaze maze = MazeGenerator.generateBlankMaze(Maze.MIN_SIZE);
+        for (int i = 0; i < Maze.MIN_SIZE; i++) {
+            assertFalse(maze.isPath(i, 0));
+            assertFalse(maze.isPath(0, i));
+            assertFalse(maze.isPath(i, Maze.MIN_SIZE - 1));
+            assertFalse(maze.isPath(0, Maze.MIN_SIZE - 1));
+        }
+        for (int y = 1; y < Maze.MIN_SIZE - 1; y++)
+            for (int x = 1; x < Maze.MIN_SIZE - 1; x++)
+                assertTrue(maze.isPath(x, y));
+    }
 }

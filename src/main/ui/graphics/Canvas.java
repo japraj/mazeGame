@@ -28,7 +28,8 @@ public class Canvas extends JPanel {
     public static final Color PLAYER_COLOR = Color.RED;
     public static final int PLAYER_WIDTH = PATH_WIDTH + 2;
     public static final int FPS = 30;
-    public static final String WIN_MESSAGE = "Congratulations, you have completed this maze! Press space to try again.";
+    public static final String WIN_MESSAGE = "Congratulations, you have completed this maze! Press space or 'Generate"
+            + " Maze' to try again.";
 
     private PathEngine pathEngine;
 
@@ -114,6 +115,7 @@ public class Canvas extends JPanel {
                 try {
                     Thread.sleep(delay);
                 } catch (InterruptedException e) {
+
                 }
             }
         }
@@ -207,7 +209,7 @@ public class Canvas extends JPanel {
         g.setFont(MazeGame.HEADER);
         FontMetrics fm = g.getFontMetrics();
         Rectangle2D r = fm.getStringBounds(WIN_MESSAGE, g);
-        int x = ((CELL_LENGTH * (Maze.MAX_SIZE - 3)) - (int) r.getWidth()) / 2;
+        int x = ((CELL_LENGTH * Maze.MAX_SIZE) - (int) r.getWidth()) / 2;
         int y = ((CELL_LENGTH * (Maze.MAX_SIZE - 15)) - (int) r.getHeight()) / 2 + fm.getAscent();
         g.drawString(WIN_MESSAGE, x, y);
     }
