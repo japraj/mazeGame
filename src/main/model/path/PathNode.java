@@ -40,6 +40,8 @@ public class PathNode extends Position {
         return new PathNode(super.applyMove(direction), direction);
     }
 
+    // unused; only remains here in case we decide to store PathNodes, because it will use its inherited toJson method
+    // and break any code (direction would not be saved)
     // EFFECTS: produces a JSON representation of this
     @Override
     public JSONObject toJson() {

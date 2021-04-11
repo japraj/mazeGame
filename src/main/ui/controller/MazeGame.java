@@ -5,7 +5,6 @@ import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.moveable.Move;
 import model.moveable.Player;
-import model.path.Path;
 import model.solver.FirstPath;
 import model.solver.MazeSolver;
 import persistence.JsonReader;
@@ -104,7 +103,7 @@ public class MazeGame extends JFrame {
             mazeGenerator = new MazeGenerator(size);
             maze = mazeGenerator.generateMaze();
             player = new Player(maze);
-            solver = new FirstPath(maze, new Path());
+            solver = new FirstPath(maze);
         }
     }
 
@@ -121,7 +120,7 @@ public class MazeGame extends JFrame {
         }
         mazeGenerator = new MazeGenerator(size);
         player = jsonReader.readPlayer(maze);
-        solver = new FirstPath(maze, new Path());
+        solver = new FirstPath(maze);
 
         if (reset) {
             drawCanvas();
@@ -161,7 +160,6 @@ public class MazeGame extends JFrame {
     public void solve(boolean animate) {
         blocked = true;
         canvas.paintSolver(getTranslatedGraphics(), maze, solver, animate);
-        solver.reset();
     }
 
     // MODIFIES: this
@@ -199,7 +197,7 @@ public class MazeGame extends JFrame {
         this.size = size % 2 == 1 ? size : size + 1;
         // generate maze and update refs
         maze = mazeGenerator.generateMaze(size);
-        solver = new FirstPath(maze, new Path());
+        solver = new FirstPath(maze);
         reset();
     }
 

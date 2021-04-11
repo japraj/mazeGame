@@ -6,6 +6,8 @@ import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -25,22 +27,16 @@ public abstract class MazeSolverTest {
     @BeforeEach
     public void setup() {
         maze = new Maze(Maze.MIN_SIZE);
+        init();
     }
 
 
     // initialize the solver variable with the algorithm that is being tested, using super.maze and the given path param
     // as arguments for the constructor
-    abstract public void init(Path path);
-
-    public void init() {
-        init(new Path());
-    }
+    abstract public void init();
 
     @Test
     public void testRandomInitPath() {
-        // this test checks the solver's ability solve from any given starting point (the test below tests with 1,1
-        // as the starting point)
-
         // initialize a maze that has a single solution starting at 1,1 going all the way down, and the going all the
         // way to the right (like an L shape), and build up a solution path for comparison simultaneously
         Path solution = new Path(true);
@@ -52,17 +48,7 @@ public abstract class MazeSolverTest {
             maze.setCell(x, Maze.MIN_SIZE - 2, Maze.PATH);
             solution.addNode(x, Maze.MIN_SIZE - 2);
         }
-
-        Path initPath = new Path();
-        initPath.addNode(1, 2);
-        initPath.addNode(1, 3);
-        init(initPath);
-
         tickSolver(50);
-        // tick over to make sure it does not keep trying to solve and corrupt the path
-        for (int i = 0; i < 10; i++) {
-            solver.tick();
-        }
         assertEquals(solution, solver.getPath());
     }
 
@@ -104,12 +90,10 @@ public abstract class MazeSolverTest {
         int blockCoord = Maze.MIN_SIZE - 3;
         maze.setCell(blockCoord, Maze.MIN_SIZE - 2, Maze.WALL);
 
-        init();
         tickSolver(150);
         assertEquals(solutionUpper, solver.getPath());
 
-        // reset solver, block the upper path, and unblock the lower path, so the lower path is the only valid solution
-        solver.reset();
+        // block the upper path, and unblock the lower path, so the lower path is the only valid solution
         maze.setCell(blockCoord, Maze.MIN_SIZE - 2, Maze.PATH);
         maze.setCell(Maze.MIN_SIZE - 2, blockCoord, Maze.WALL);
         tickSolver(150);
@@ -145,20 +129,21 @@ public abstract class MazeSolverTest {
         maze.setCell(4, 4, Maze.WALL);
 
         // tick the solver to completion - if it takes more than 150 ticks, it is in an infinite loop
-        init();
         tickSolver(150);
         // all solutions to this maze are 9 nodes long (due to the symmetry); there are 4 solutions so we simply check
         // path length - if all other tests are passed, then this one will not have an invalid solution
         assertEquals(9, solver.getPath().getLength());
     }
 
+    // tick solver n times or until completion, whichever comes first
     protected void tickSolver(int n) {
+        Iterator<Path> iterator = solver.iterator();
         int ticks = 0;
-        while (!solver.isSolved() && ticks < n) {
-            solver.tick();
+        while (iterator.hasNext() && ticks < n) {
+            iterator.next();
             ticks++;
         }
-        // if it is n ticks, the solver is in a loop
+        // if it is n ticks, the solver took too many ticks (it is either in a loop or too inefficient)
         if (ticks == n) {
             fail();
         }

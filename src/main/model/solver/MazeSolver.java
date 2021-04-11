@@ -6,45 +6,31 @@ import model.path.Path;
 import model.path.Position;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 // An Algorithm that solves the given maze
-public abstract class MazeSolver {
+public abstract class MazeSolver implements Iterable<Path> {
 
     // The order of MOVES actually makes a significant difference to backtracking solvers; it determines what directions
     // we prioritize; we want DOWN and RIGHT to be prioritized because they are the direction of our goal!
-    public static final Move[] MOVES = {Move.DOWN, Move.RIGHT, Move.UP, Move.LEFT };
+    public static final Move[] MOVES = {Move.DOWN, Move.RIGHT, Move.UP, Move.LEFT};
     protected ImmutableMaze maze;
     protected Path path;
 
     // MODIFIES: this
-    // EFFECTS: set maze to be solved and add path that the algorithm should use as base for solution
-    //          (empty path indicates that the algorithm should start from top left)
-    public MazeSolver(ImmutableMaze maze, Path initPath) {
+    // EFFECTS: set maze to be solved
+    public MazeSolver(ImmutableMaze maze) {
         this.maze = maze;
-        path = initPath;
-    }
-
-    // EFFECTS: produce true if maze has been solved
-    public boolean isSolved() {
-        Position tail = path.getTail();
-        // check if final node in path is in the bottom right corner of the maze
-        return tail.getPosX() == maze.getSize() - 2 && tail.getPosX() == tail.getPosY();
     }
 
     // REQUIRES: Maze has not been fully solved yet (only called if solved produces false)
     // MODIFIES: this
     // EFFECTS: tick the algorithm one step forward and produce the current path
-    public abstract Path tick();
+    protected abstract Path tick();
 
     public Path getPath() {
         return path;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: resets the solver
-    public void reset() {
-        path = new Path();
     }
 
     // EFFECTS: produces true if adding move to current path would not run us into a wall and would not take us to a
@@ -66,5 +52,27 @@ public abstract class MazeSolver {
             }
         }
         return moves;
+    }
+
+    // EFFECTS: produce iterator for this, reset path
+    public Iterator<Path> iterator() {
+        path = new Path();
+        return new SolverIterator();
+    }
+
+    protected class SolverIterator implements Iterator<Path> {
+        // EFFECTS: produce true if maze has not yet been solved
+        @Override
+        public boolean hasNext() {
+            Position tail = path.getTail();
+            // check if final node in path is in the bottom right corner of the maze
+            return !(tail.getPosX() == maze.getSize() - 2 && tail.getPosY() == maze.getSize() - 2);
+        }
+
+        // EFFECTS: produce next path in solving algorithm
+        @Override
+        public Path next() {
+            return tick();
+        }
     }
 }

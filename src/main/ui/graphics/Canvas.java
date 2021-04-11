@@ -108,16 +108,13 @@ public class Canvas extends JPanel {
         paintMaze(g, maze);
         pathEngine = new PathEngine();
         int delay = 1000 / FPS; // 1000 ms per second; this delay is in ms
-        while (!solver.isSolved()) {
+        for (Path p : solver) {
             if (animate) {
-                paintPathAnimate(g, solver.tick());
+                paintPathAnimate(g, p);
                 try {
                     Thread.sleep(delay);
                 } catch (InterruptedException e) {
-                    continue;
                 }
-            } else {
-                solver.tick();
             }
         }
         if (!animate) {

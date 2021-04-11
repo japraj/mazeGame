@@ -5,9 +5,10 @@ import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.path.Path;
 import model.solver.FirstPath;
-import model.solver.MazeSolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,10 +59,10 @@ public class MazeGeneratorTest {
     @Test
     public void testSingleSolve() {
         maze = mazeGenerator.generateMaze(Maze.MIN_SIZE * 2 - 1);
-        MazeSolver solver = new FirstPath(maze, new Path());
+        Iterator<Path> solver = new FirstPath(maze).iterator();
         int ticks = 0;
-        while (!solver.isSolved() && ticks < MAX_TICKS) {
-            solver.tick();
+        while (solver.hasNext() && ticks < MAX_TICKS) {
+            solver.next();
             ticks++;
         }
         if (ticks == MAX_TICKS) {
@@ -72,17 +73,17 @@ public class MazeGeneratorTest {
     @Test
     public void testMultipleSolve() {
         // test several times to make sure the generator doesn't just get lucky!
-        MazeSolver solver;
+        Iterator<Path> solver;
         int ticks;
         int size = Maze.floorOdd((Maze.MIN_SIZE + Maze.MAX_SIZE) / 2);
         // large number to make sure it is given ample chance to solve - if the solver and maze generator both work
         // properly, the test's execution time will be much shorter
         for (int i = 0; i < 50; i++) {
             maze = mazeGenerator.generateMaze(size);
-            solver = new FirstPath(maze, new Path());
+            solver = new FirstPath(maze).iterator();
             ticks = 0;
-            while (!solver.isSolved() && ticks < MAX_TICKS) {
-                solver.tick();
+            while (solver.hasNext() && ticks < MAX_TICKS) {
+                solver.next();
                 ticks++;
             }
             // if took max # of ticks, then the solver was unable to solve; else, we implicitly return and the test is
