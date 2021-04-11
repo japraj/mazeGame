@@ -25,7 +25,11 @@ public abstract class MoveableEntity implements Saveable {
 
     // MODIFIES: this
     // EFFECTS: if moving in specified manner does not run into a wall, apply the move
-    public abstract void tryMove(Move move);
+    public void tryMove(Move move) {
+        if (isValid(move))
+            position = position.applyMove(move);
+    }
+
 
     // EFFECTS: produce current position of this entity
     public Position getPosition() {

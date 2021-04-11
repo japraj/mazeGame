@@ -1,15 +1,14 @@
 package persistence;
 
 import model.maze.Maze;
-import model.moveable.Move;
 import model.moveable.Player;
-import model.path.Path;
 import model.path.Position;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class JsonReaderTest {
 
@@ -38,14 +37,6 @@ public class JsonReaderTest {
             }
         }
         Player player = jsonReader.readPlayer(maze);
-        Path comparePath = new Path();
-        for (int i = 0; i < 4; i++) {
-            // this assertion tests that visited was loaded properly
-            assertTrue(player.getPath().visitedNode(comparePath.getTail()));
-            comparePath.addNode(Move.DOWN);
-        }
-        assertTrue(player.getPath().visitedNode(comparePath.getTail()));
-        assertEquals(comparePath, player.getPath());
         assertEquals(new Position(1, 5), player.getPosition());
     }
 

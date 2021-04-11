@@ -2,22 +2,14 @@ package persistence;
 
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
-import model.moveable.Move;
 import model.moveable.Player;
-import model.path.Path;
-import model.path.PathNode;
 import model.path.Position;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 // handles reading of objects from a JSON file
@@ -46,7 +38,7 @@ public class JsonReader {
     // EFFECTS: parses player from JSON obj and returns it
     public Player readPlayer(ImmutableMaze maze) {
         JSONObject playerObj = obj.getJSONObject("player");
-        return new Player(maze, readPosField(playerObj), readPathField(playerObj));
+        return new Player(maze, readPosField(playerObj));
     }
 
     // REQUIRES: playerObj must have a JSONObject under the key 'pos'
@@ -61,30 +53,5 @@ public class JsonReader {
         return new Position(posObj.getInt("x"), posObj.getInt("y"));
     }
 
-    // REQUIRES: playerObj must have a JSONObject under the key 'path'
-    // EFFECTS: parses Path object from given JSONObject under key 'path' and returns it
-    private static Path readPathField(JSONObject playerObj) {
-        JSONObject pathObj = playerObj.getJSONObject("path");
-        List<PathNode> pathNodes = new ArrayList<>();
-        Set<Position> visited = new HashSet<>();
-
-        JSONObject node;
-        Move move;
-        for (Object obj : pathObj.getJSONArray("path")) {
-            node = (JSONObject) obj;
-            try {
-                move = node.getEnum(Move.class, "direction");
-            } catch (JSONException e) {
-                move = null;
-            }
-            pathNodes.add(new PathNode(readPos(node), move));
-        }
-
-        for (Object obj : pathObj.getJSONArray("visited")) {
-            visited.add(readPos((JSONObject) obj));
-        }
-
-        return new Path(pathNodes, visited);
-    }
 
 }

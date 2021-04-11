@@ -47,7 +47,6 @@ public class JsonWriterTest {
         }
 
         Player readPlayer = jsonReader.readPlayer(readMaze);
-        assertEquals(player.getPath(), readPlayer.getPath());
         assertEquals(player.getPosition(), readPlayer.getPosition());
     }
 }

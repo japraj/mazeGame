@@ -1,14 +1,11 @@
 package model.path;
 
 import model.moveable.Move;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import persistence.Saveable;
 
 import java.util.*;
 
 // A Path in a Maze; always starts with the PathNode (1,1, null)
-public class Path implements Saveable, Iterable<PathNode> {
+public class Path implements Iterable<PathNode> {
 
     private Stack<PathNode> path;
     private Set<Position> visited;
@@ -25,16 +22,6 @@ public class Path implements Saveable, Iterable<PathNode> {
         path.add(origin);
         visited = new HashSet<>();
         visited.add(origin);
-        branches = new LinkedList<>();
-        currentBranch = new ArrayList<>();
-        noDuplicatesNodes = false;
-    }
-
-    // EFFECTS: creates a Path with given pathNodes and visited; allows dupes, has no branches, and default index
-    public Path(List<PathNode> path, Set<Position> visited) {
-        this.path = new Stack<>();
-        this.path.addAll(path);
-        this.visited = visited;
         branches = new LinkedList<>();
         currentBranch = new ArrayList<>();
         noDuplicatesNodes = false;
@@ -224,26 +211,6 @@ public class Path implements Saveable, Iterable<PathNode> {
     // EFFECTS: produce length of this
     public int getLength() {
         return path.size();
-    }
-
-    // EFFECTS: produces a JSON representation of this
-    @Override
-    public JSONObject toJson() {
-        JSONObject obj = new JSONObject();
-
-        JSONArray arr = new JSONArray();
-        for (PathNode p : path) {
-            arr.put(p.toJson());
-        }
-        obj.put("path", arr);
-
-        arr = new JSONArray();
-        for (Position p : visited) {
-            arr.put(p.toJson());
-        }
-        obj.put("visited", arr);
-
-        return obj;
     }
 
     // EFFECTS: returns an iterator for this
