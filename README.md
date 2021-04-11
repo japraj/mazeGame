@@ -2,7 +2,7 @@
 
 ![Image of maze game](https://i.imgur.com/320vQJT.png)
 
-## Proposal
+## Features
 
 We operate on square mazes which start at the top left and terminate at the bottom right. The simulator has 4 main
  features:
