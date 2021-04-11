@@ -70,7 +70,7 @@ public class MazeGame extends JFrame {
         // initialize & add children JPanels
         setLayout(new FlowLayout(FlowLayout.LEFT));
         config = new ConfigPanel(this, screen.height, size);
-        canvas = new ui.graphics.Canvas(screen);
+        canvas = new ui.graphics.Canvas(new Dimension(screen.width - ConfigPanel.WIDTH, screen.height));
         add(config);
         add(canvas);
 

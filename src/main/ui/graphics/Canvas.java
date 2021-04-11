@@ -1,6 +1,7 @@
 package ui.graphics;
 
 import model.maze.ImmutableMaze;
+import model.maze.Maze;
 import model.moveable.Move;
 import model.moveable.Player;
 import model.path.Path;
@@ -10,11 +11,9 @@ import model.path.Position;
 import model.solver.MazeSolver;
 import ui.controller.MazeGame;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 // A canvas that handles rendering of maze, player, and paths
@@ -29,13 +28,12 @@ public class Canvas extends JPanel {
     public static final Color PLAYER_COLOR = Color.RED;
     public static final int PLAYER_WIDTH = PATH_WIDTH + 2;
     public static final int FPS = 30;
-    public static final String IMAGE_PATH = "./data/congrats.jpg";
+    public static final String WIN_MESSAGE = "Congratulations, you have completed this maze! Press space to try again.";
 
     private PathEngine pathEngine;
 
     // EFFECTS: initializes canvas to be specified size
-    public Canvas(Dimension screen) {
-        Dimension size = new Dimension(screen.width - ConfigPanel.WIDTH, screen.height);
+    public Canvas(Dimension size) {
         setPreferredSize(size);
         setMinimumSize(size);
         setMaximumSize(size);
@@ -208,19 +206,13 @@ public class Canvas extends JPanel {
     public void paintWin(Graphics g) {
         wipeScreen(g);
         g.setColor(Color.WHITE);
-        try {
-            g.drawImage(ImageIO.read(new File(IMAGE_PATH)),
-                    CELL_LENGTH * 8,
-                    CELL_LENGTH * 3,
-                    CELL_LENGTH * 8,
-                    CELL_LENGTH * 4,
-                    null);
-        } catch (IOException e) {
-            System.out.println("Failed to draw image");
-        }
-        g.drawString("Congratulations, you have completed this maze! Press space to try again.",
-                    CELL_LENGTH * 5,
-                    CELL_LENGTH * 8);
+
+        g.setFont(MazeGame.HEADER);
+        FontMetrics fm = g.getFontMetrics();
+        Rectangle2D r = fm.getStringBounds(WIN_MESSAGE, g);
+        int x = ((CELL_LENGTH * (Maze.MAX_SIZE - 3)) - (int) r.getWidth()) / 2;
+        int y = ((CELL_LENGTH * (Maze.MAX_SIZE - 15)) - (int) r.getHeight()) / 2 + fm.getAscent();
+        g.drawString(WIN_MESSAGE, x, y);
     }
 
     // MODIFIES: g
