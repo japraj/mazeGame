@@ -235,7 +235,9 @@ public class ConfigPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: adds action handlers to all interactive GUI elements
     private void addActionHandlers() {
-        generateMaze.addActionListener(e -> mazeGame.generateNewMaze((int) sizeSpinner.getValue()));
+        sizeSpinner.addChangeListener(e -> mazeGame.setSize((int) sizeSpinner.getValue()));
+
+        generateMaze.addActionListener(e -> mazeGame.generateNewMaze());
 
         solveMaze.addActionListener(e -> mazeGame.solve(animateSolve.isSelected()));
 

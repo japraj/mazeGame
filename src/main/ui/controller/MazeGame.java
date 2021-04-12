@@ -182,23 +182,26 @@ public class MazeGame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: if size is an odd int in the range [MazeGame.MIN_SIZE, MazeGame.MAX_SIZE], generates new maze of
-    //          specified size else if size does not conform to those constraints, forces it to do so and then generates
-    //          a maze of size
-    public void generateNewMaze(int size) {
-        // set size
-        if (size < Maze.MIN_SIZE) {
-            size = Maze.MIN_SIZE;
-        } else if (size > Maze.MAX_SIZE) {
-            size = Maze.MAX_SIZE;
-        }
-        this.size = size % 2 == 1 ? size : size + 1;
+    // EFFECTS: generates new maze of
+    public void generateNewMaze() {
         // generate maze and update refs
         maze = mazeGenerator.generateMaze(size);
         solver = new FirstPath(maze);
         player = new Player(maze);
         blocked = false;
         drawCanvas();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets size, ensuring that it satisfies the requirement of being an odd integer in the interval
+    //          [Maze.MIN_SIZE, Maze.MAX_SIZE]
+    public void setSize(int size) {
+        if (size < Maze.MIN_SIZE) {
+            size = Maze.MIN_SIZE;
+        } else if (size > Maze.MAX_SIZE) {
+            size = Maze.MAX_SIZE;
+        }
+        this.size = size % 2 == 1 ? size : size + 1;
     }
 
     // MODIFIES: this
