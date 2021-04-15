@@ -12,6 +12,7 @@ We operate on square mazes which start at the top left and terminate at the bott
 Wikipedia
 - Maze Solving: animate the shortest path or first path solution, starting from the top left corner, or the
 user's current position 
+- Editable Canvas: can remove walls with right-click and place them with left-click
 - Controllable Character: the user can control a character to traverse and manually solve the maze, with options to
 spice up the game. The goal is to complete the maze in the shortest possible time
 - Data Persistence: the user can save and load their data
@@ -21,22 +22,9 @@ spice up the game. The goal is to complete the maze in the shortest possible tim
 When I was first learning to code, I made a very primitive maze game for fun. After studying recursive traversal of 
 graphs in an intro CS class, I was inspired to redo this old project from scratch using the new skills I have picked up
 over the past few years. The maze game was *very* simple (just a hardcoded maze that you could walk around in, with a
-GUI - see bottom for an image). The scope of this project is larger - I have added a lot of features that I dreamed 
+GUI). The scope of this project is larger - I have added a lot of features that I dreamed 
 about when I made the first game and this time I have unit tests :)
  
- ## User Stories
- 
- As a user, I want to be able to...
- 
- - use MazeGenerator to produce a random Maze of the specified size
- - use Canvas and an implementation of MazeSolver to see the solution Path for the Maze
- - use Canvas to watch an animation of intermediate Paths produced by a MazeSolver
- - add a sequence of Moves to my current Path to traverse the Maze using the keyboard
- - have the current Maze and my current Player implicitly saved when I quit the application
- - have my previous Maze and Player automatically loaded (if possible) when I launch the application
- - have a random maze produced when I launch the app if there is no previous state to load
- - use save and load buttons to access data persistence features
- - see an image when I finish the maze
  
  ## Original Maze Game
  
