@@ -1,5 +1,7 @@
 # Maze Simulator
 
+![Image of Maze Game](https://i.imgur.com/NWIM7C0.png)
+
 ![Image of maze game](https://i.imgur.com/320vQJT.png)
 
 ## Features
