@@ -3,7 +3,6 @@ package model.path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 
 // This class handles the logic for path painting; in order to minimize the number of paint calls to Graphics context
 // objects (in particular, this class determines what cells need to be wiped & which need to be painted by computing
@@ -34,7 +33,8 @@ public class PathEngine {
             toPlace = path.subtract(placed, true);
             placed.removeAll(toWipe);
         }
-        placed.addAll(toPlace);
+        for (PathNode p : toPlace)
+            if (!placed.contains(p)) placed.add(p);
     }
 
     // EFFECTS: produces a list of all cells that are currently placed

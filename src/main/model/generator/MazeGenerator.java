@@ -1,6 +1,5 @@
 package model.generator;
 
-import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.moveable.Move;
 import model.path.Position;
@@ -51,14 +50,14 @@ public class MazeGenerator {
     // REQUIRES: size must be odd and in [MazeGame.MIN_SIZE, MazeGame.MAX_SIZE]
     // MODIFIES: this
     // EFFECTS: produce a square maze with specified side-length
-    public ImmutableMaze generateMaze(int size) {
+    public Maze generateMaze(int size) {
         this.size = size;
         return generateMaze();
     }
 
     // MODIFIES: this
     // EFFECTS: produce a square maze with most recently specified side-length
-    public ImmutableMaze generateMaze() {
+    public Maze generateMaze() {
         // This is an iterative implementation of the randomized depth-first search maze generation algorithm from
         // Wikipedia: https://en.wikipedia.org/wiki/Maze_generation_algorithm
         // We model a graph with the 2-dimensional boolean array that is Maze so we can apply algorithms that operate on

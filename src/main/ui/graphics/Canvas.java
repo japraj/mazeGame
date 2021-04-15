@@ -17,11 +17,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 // A canvas that handles rendering of maze, player, and paths
-public class Canvas extends JPanel {
+public final class Canvas extends JPanel {
 
     // size of a cell in pixels; must be odd and >= 7; 29, 13, 9 work very well. Smaller CELL_LENGTH == more cells!
     // in particular, choosing a number that can be written in the form '5 + 4n', for any n >= 0, will look smooth
-    public static final int CELL_LENGTH = 17;
+    public static final int CELL_LENGTH = 37;
     public static final Color PATH_COLOR = Color.BLUE;
     public static final Color HEAD_COLOR = Color.DARK_GRAY;
     public static final int PATH_WIDTH = (CELL_LENGTH + 1) / 2;
@@ -109,16 +109,18 @@ public class Canvas extends JPanel {
         paintMaze(g, maze);
         pathEngine = new PathEngine();
         int delay = 1000 / FPS; // 1000 ms per second; this delay is in ms
+
         for (Path p : solver) {
             if (animate) {
                 paintPathAnimate(g, p);
                 try {
                     Thread.sleep(delay);
-                } catch (InterruptedException e) {
-
+                } catch (Exception e) {
+                    //
                 }
             }
         }
+
         if (!animate) {
             paintSingularPath(g, solver.getPath());
         }
@@ -154,6 +156,13 @@ public class Canvas extends JPanel {
     // EFFECTS: fills cell with specified Position with current color of g
     private void fill(Graphics g, Position pos) {
         g.fillRect(pos.getPosX() * CELL_LENGTH, pos.getPosY() * CELL_LENGTH, CELL_LENGTH, CELL_LENGTH);
+    }
+
+    // MODIFIES: g
+    // EFFECTS: sets color of g to c, fills cell with specified Position with specified color
+    public void fillColor(Graphics g, Position pos, Color c) {
+        g.setColor(c);
+        fill(g, pos);
     }
 
     // REQUIRES: g.setColor() must be set to appropriate color prior to calling this method (for efficiency)

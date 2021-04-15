@@ -1,12 +1,10 @@
 package ui.controller;
 
 import model.generator.MazeGenerator;
-import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.moveable.Move;
 import model.moveable.Player;
-import model.solver.FirstPath;
-import model.solver.MazeSolver;
+import model.path.Position;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 import ui.graphics.Canvas;
@@ -14,10 +12,7 @@ import ui.graphics.ConfigPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 
 // Main MazeGame Window, integrates I/O, Generator/Solver/Maze
@@ -38,8 +33,7 @@ public class MazeGame extends JFrame {
     // models
     private MazeGenerator mazeGenerator;
     private int size;
-    private ImmutableMaze maze;
-    private MazeSolver solver;
+    private Maze maze;
     private Player player;
     private boolean blocked;
     // graphics
@@ -73,7 +67,7 @@ public class MazeGame extends JFrame {
         add(config);
         add(canvas);
 
-        addKeyListeners();
+        addListeners();
         setVisible(true);
 
         // set up timer
@@ -98,9 +92,7 @@ public class MazeGame extends JFrame {
         blocked = false;
         size = Maze.MIN_SIZE;
         mazeGenerator = new MazeGenerator(size);
-        maze = MazeGenerator.generateBlankMaze(size);
-        player = new Player(maze);
-        solver = new FirstPath(maze);
+        updateMazeRefs(MazeGenerator.generateBlankMaze(size));
     }
 
     // MODIFIES: this
@@ -116,7 +108,6 @@ public class MazeGame extends JFrame {
         }
         mazeGenerator = new MazeGenerator(size);
         player = jsonReader.readPlayer(maze);
-        solver = new FirstPath(maze);
 
         if (reset) {
             drawCanvas();
@@ -155,15 +146,18 @@ public class MazeGame extends JFrame {
     // EFFECTS: solves maze and resets solver; animates solver as specified
     public void solve(boolean animate) {
         blocked = true;
-        canvas.paintSolver(getTranslatedGraphics(), maze, solver, animate);
+        try {
+            canvas.paintSolver(getTranslatedGraphics(), maze, config.getSelectedSolver(maze), animate);
+        } catch (IllegalArgumentException e) {
+            // If the player puts the maze in an unsolvable state (by editing walls)
+            reset();
+        }
     }
 
     // MODIFIES: this
-    // EFFECTS: resets player, makes blank maze, repaints canvas
+    // EFFECTS: resets player, repaints canvas
     public void reset() {
-        maze = MazeGenerator.generateBlankMaze(size);
         player = new Player(maze);
-        solver = new FirstPath(maze);
         blocked = false;
         drawCanvas();
     }
@@ -182,14 +176,32 @@ public class MazeGame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: generates new maze of
-    public void generateNewMaze() {
-        // generate maze and update refs
-        maze = mazeGenerator.generateMaze(size);
-        solver = new FirstPath(maze);
-        player = new Player(maze);
+    // EFFECTS: updates all Maze references and reset player position
+    public void updateMazeRefs(Maze maze) {
         blocked = false;
+        this.maze = maze;
+        player = new Player(maze);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: generates new maze of
+    public void generateNewMaze(boolean blank) {
+        // generate maze and update refs
+        updateMazeRefs(blank ? MazeGenerator.generateBlankMaze(size) : mazeGenerator.generateMaze(size));
         drawCanvas();
+    }
+
+    public void setCell(int x, int y, State state) {
+        if (state != State.NONE
+                && 0 < x && x < size - 1
+                && 0 < y && y < size - 1
+                && !blocked
+                && !player.getPosition().equals(x, y)) {
+            maze.setCell(x, y, state == State.PATH);
+            canvas.fillColor(getTranslatedGraphics(),
+                    new Position(x, y),
+                    state == State.PATH ? Color.WHITE : Color.BLACK);
+        }
     }
 
     // MODIFIES: this
@@ -205,12 +217,15 @@ public class MazeGame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: adds a KeyListener to this, canvas, and config
-    private void addKeyListeners() {
+    // EFFECTS: adds a KeyListener to this, canvas, and config and a MouseListener to this, canvas
+    private void addListeners() {
         KeyHandler keyHandler = new KeyHandler();
         addKeyListener(keyHandler);
         canvas.addKeyListener(keyHandler);
         config.addKeyListener(keyHandler);
+        MouseAdapter mouseHandler = new ClickListener();
+        addMouseListener(mouseHandler);
+        addMouseMotionListener(mouseHandler);
     }
 
     private class KeyHandler extends KeyAdapter {
@@ -250,6 +265,47 @@ public class MazeGame extends JFrame {
         public void windowClosing(WindowEvent event) {
             save();
             System.exit(0);
+        }
+    }
+
+    private enum State {
+        NONE, PATH, WALL
+    }
+
+    // if mouse is hovering over a valid cell (i.e. player is not currently in that cell, and cell is not one of the
+    // border walls) then if right-click, replace that cell with PATH, else replace that cell with WALL
+    private class ClickListener extends MouseAdapter {
+
+        private State state = State.NONE;
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            switch (e.getButton()) {
+                case MouseEvent.BUTTON1:
+                    state = State.WALL;
+                    break;
+                case MouseEvent.BUTTON3:
+                    state = State.PATH;
+                    break;
+                default:
+                    state = State.NONE;
+                    break;
+            }
+            setCell(((e.getX() - config.getWidth()) / Canvas.CELL_LENGTH) - 1,
+                    e.getY() / Canvas.CELL_LENGTH,
+                    state);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            state = State.NONE;
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            setCell(((e.getX() - config.getWidth()) / Canvas.CELL_LENGTH) - 1,
+                    e.getY() / Canvas.CELL_LENGTH,
+                    state);
         }
     }
 }

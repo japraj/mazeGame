@@ -70,4 +70,5 @@ public class PathEngineTest {
             assertTrue(placed.contains(p));
         }
     }
+
 }

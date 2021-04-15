@@ -1,6 +1,9 @@
 package ui.graphics;
 
+import model.maze.ImmutableMaze;
 import model.maze.Maze;
+import model.solver.FirstPath;
+import model.solver.MazeSolver;
 import ui.controller.MazeGame;
 
 import javax.swing.*;
@@ -19,8 +22,9 @@ public class ConfigPanel extends JPanel {
     private MazeGame mazeGame;
     // genPanel
     private JSpinner sizeSpinner;
-//    private JCheckBox animateGeneration;
+    //    private JCheckBox animateGeneration;
     private JButton generateMaze;
+    private JButton blankMaze;
     // solvePanel
     private List<ButtonModel> buttons;
     private ButtonGroup algorithm;
@@ -52,7 +56,7 @@ public class ConfigPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: produces the generation panel and initializes associated variables
     private Component getGenerationPanel(int size) {
-        JPanel genPanel = makePanel("Generate Maze", 90); // 120 w/ animateGeneration
+        JPanel genPanel = makePanel("Generate Maze", 120); // 120 w/ animateGeneration
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.NONE;
 
@@ -79,6 +83,14 @@ public class ConfigPanel extends JPanel {
         generateMaze = new JButton("Generate Maze");
         genPanel.add(generateMaze, c);
         generateMaze.setFocusable(false);
+
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 2;
+        blankMaze = new JButton("Blank Canvas");
+        genPanel.add(blankMaze, c);
+        blankMaze.setFocusable(false);
+
 
         // AnimateGeneration CheckBox
         c.gridy = 2;
@@ -237,7 +249,9 @@ public class ConfigPanel extends JPanel {
     private void addActionHandlers() {
         sizeSpinner.addChangeListener(e -> mazeGame.setSize((int) sizeSpinner.getValue()));
 
-        generateMaze.addActionListener(e -> mazeGame.generateNewMaze());
+        generateMaze.addActionListener(e -> mazeGame.generateNewMaze(false));
+
+        blankMaze.addActionListener(e -> mazeGame.generateNewMaze(true));
 
         solveMaze.addActionListener(e -> mazeGame.solve(animateSolve.isSelected()));
 
@@ -250,6 +264,11 @@ public class ConfigPanel extends JPanel {
                 System.out.println("Failed to load");
             }
         });
+    }
+
+    // EFFECTS: return solver of selected type
+    public MazeSolver getSelectedSolver(ImmutableMaze maze) {
+        return new FirstPath(maze);
     }
 
 }
