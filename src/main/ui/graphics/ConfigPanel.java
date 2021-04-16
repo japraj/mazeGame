@@ -2,7 +2,7 @@ package ui.graphics;
 
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
-import model.solver.FirstPath;
+import model.solver.backtracker.Backtracker;
 import model.solver.MazeSolver;
 import ui.controller.MazeGame;
 
@@ -154,7 +154,7 @@ public class ConfigPanel extends JPanel {
         separator.setForeground(MazeGame.ACCENTS);
         container.add(separator);
 
-        makeAlgorithmButton(container, "First Path", true);
+        makeAlgorithmButton(container, "Backtracker", true);
 //        makeAlgorithmButton(container, "Shortest Path", false);
 //        makeAlgorithmButton(container, "A*", false);
 
@@ -268,7 +268,7 @@ public class ConfigPanel extends JPanel {
 
     // EFFECTS: return solver of selected type
     public MazeSolver getSelectedSolver(ImmutableMaze maze) {
-        return new FirstPath(maze);
+        return new Backtracker(maze);
     }
 
 }

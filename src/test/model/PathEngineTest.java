@@ -65,7 +65,7 @@ public class PathEngineTest {
         assertTrue(toPlace.contains(new Position(3, 3)));
 
         List<PathNode> placed = engine.getPlaced();
-        assertEquals(6, placed.size());
+        assertEquals(5, placed.size());
         for (PathNode p : branch2.getNodes()) {
             assertTrue(placed.contains(p));
         }

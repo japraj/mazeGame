@@ -4,7 +4,7 @@ import model.generator.MazeGenerator;
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
 import model.path.Path;
-import model.solver.FirstPath;
+import model.solver.backtracker.Backtracker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,7 +59,7 @@ public class MazeGeneratorTest {
     @Test
     public void testSingleSolve() {
         maze = mazeGenerator.generateMaze(Maze.MIN_SIZE * 2 - 1);
-        Iterator<Path> solver = new FirstPath(maze).iterator();
+        Iterator<Path> solver = new Backtracker(maze).iterator();
         int ticks = 0;
         while (solver.hasNext() && ticks < MAX_TICKS) {
             solver.next();
@@ -75,12 +75,12 @@ public class MazeGeneratorTest {
         // test several times to make sure the generator doesn't just get lucky!
         Iterator<Path> solver;
         int ticks;
-        int size = Maze.floorOdd((Maze.MIN_SIZE + Maze.MAX_SIZE) / 2);
+        int size = Maze.floorOdd(Maze.MIN_SIZE * 3);
         // large number to make sure it is given ample chance to solve - if the solver and maze generator both work
         // properly, the test's execution time will be much shorter
         for (int i = 0; i < 50; i++) {
             maze = mazeGenerator.generateMaze(size);
-            solver = new FirstPath(maze).iterator();
+            solver = new Backtracker(maze).iterator();
             ticks = 0;
             while (solver.hasNext() && ticks < MAX_TICKS) {
                 solver.next();

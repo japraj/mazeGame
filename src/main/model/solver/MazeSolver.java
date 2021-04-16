@@ -54,9 +54,12 @@ public abstract class MazeSolver implements Iterable<Path> {
         return moves;
     }
 
+    // EFFECTS: resets field variables to solve maze from start
+    protected abstract void init();
+
     // EFFECTS: produce iterator for this, reset path
     public Iterator<Path> iterator() {
-        path = new Path();
+        init();
         return new SolverIterator();
     }
 
