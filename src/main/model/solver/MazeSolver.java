@@ -14,7 +14,7 @@ public abstract class MazeSolver implements Iterable<Path> {
 
     // The order of MOVES actually makes a significant difference to backtracking solvers; it determines what directions
     // we prioritize; we want DOWN and RIGHT to be prioritized because they are the direction of our goal!
-    public static final Move[] MOVES = {Move.DOWN, Move.RIGHT, Move.UP, Move.LEFT};
+    public static final Move[] MOVES = {Move.LEFT, Move.UP, Move.RIGHT, Move.DOWN}; //{Move.DOWN, Move.RIGHT, Move.UP, Move.LEFT};
     protected ImmutableMaze maze;
     protected Path path;
 

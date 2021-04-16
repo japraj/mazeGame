@@ -1,15 +1,14 @@
 package model;
 
 import model.moveable.Move;
-import model.solver.backtracker.BranchedPath;
 import model.path.Position;
+import model.solver.backtracker.BranchedPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class BranchedPathTest {
 
@@ -47,41 +46,18 @@ public class BranchedPathTest {
         path.nextBranch();
         path.generateBranches(Arrays.asList(Move.LEFT, Move.RIGHT));
         path.nextBranch();
-        assertEquals(3, path.getTail().getPosX());
-        assertEquals(1, path.getTail().getPosY());
-        path.nextBranch();
         assertEquals(5, path.getTail().getPosX());
-        assertEquals(1, path.getTail().getPosY());
+        assertEquals(3, path.getTail().getPosY());
+        path.nextBranch();
+        assertEquals(3, path.getTail().getPosX());
+        assertEquals(3, path.getTail().getPosY());
         path.nextBranch();
         assertEquals(4, path.getTail().getPosX());
-        assertEquals(3, path.getTail().getPosY());
+        assertEquals(1, path.getTail().getPosY());
         path.nextBranch();
         assertEquals(4, path.getTail().getPosX());
         assertEquals(2, path.getTail().getPosY());
         path.nextBranch();
-    }
-
-    @Test
-    public void testBranchingExceptions() {
-        path.addNode(Move.DOWN);
-        // 1st move in list is invalid
-        try {
-            path.generateBranches(Arrays.asList(Move.UP));
-            fail("Expected Exception");
-        } catch (IllegalArgumentException e) {
-            assertEquals(2, path.getLength());
-        }
-        path.addNode(Move.RIGHT);
-        path.addNode(Move.DOWN);
-        path.addNode(Move.LEFT);
-
-        // 3rd Move in list is invalid
-        try {
-            path.generateBranches(Arrays.asList(Move.LEFT, Move.DOWN, Move.UP));
-            fail("Expected Exception");
-        } catch (IllegalArgumentException e) {
-            assertEquals(5, path.getLength());
-        }
     }
 
 }

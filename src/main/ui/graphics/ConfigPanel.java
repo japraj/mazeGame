@@ -2,8 +2,8 @@ package ui.graphics;
 
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
-import model.solver.backtracker.Backtracker;
 import model.solver.MazeSolver;
+import model.solver.backtracker.Backtracker;
 import ui.controller.MazeGame;
 
 import javax.swing.*;
@@ -269,6 +269,10 @@ public class ConfigPanel extends JPanel {
     // EFFECTS: return solver of selected type
     public MazeSolver getSelectedSolver(ImmutableMaze maze) {
         return new Backtracker(maze);
+    }
+
+    public void setSize(int size) {
+        sizeSpinner.setValue(size);
     }
 
 }

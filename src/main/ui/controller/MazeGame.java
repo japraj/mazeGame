@@ -103,6 +103,7 @@ public class MazeGame extends JFrame {
 
         maze = jsonReader.readMaze();
         size = maze.getSize();
+        config.setSize(size);
         if (size > Maze.MAX_SIZE) {
             throw new IllegalStateException("Maze size out of bounds");
         }
