@@ -8,12 +8,15 @@ import model.path.Path;
 import model.path.PathEngine;
 import model.path.PathNode;
 import model.path.Position;
+import model.solver.AStar;
 import model.solver.MazeSolver;
 import ui.controller.MazeGame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 // A canvas that handles rendering of maze, player, and paths
@@ -27,7 +30,8 @@ public final class Canvas extends JPanel {
     public static final int PATH_WIDTH = (CELL_LENGTH + 1) / 2;
     public static final Color PLAYER_COLOR = Color.RED;
     public static final int PLAYER_WIDTH = PATH_WIDTH + 2;
-    public static final int FPS = 1000;
+    public static final int FPS = 60;
+    private static final int DELAY = 1000 / FPS; // delay in ms between steps of animation; 1000 ms per sec
     public static final String WIN_MESSAGE = "Congratulations, you have completed this maze! Press space or 'Generate"
             + " Maze' to try again.";
 
@@ -105,23 +109,43 @@ public final class Canvas extends JPanel {
     // MODIFIES: this, g, solver
     // EFFECTS: changes g's color, ticks solver to completion; if animate is true, animates the intermediate steps (at
     //          FPS steps per second), else simply draws the solution path
-    public void paintSolver(Graphics g, ImmutableMaze maze, MazeSolver solver, boolean animate) {
+    public void paintSolver(Graphics g, ImmutableMaze maze, MazeSolver solver, boolean animate)
+            throws InterruptedException {
         paintMaze(g, maze);
         pathEngine = new PathEngine();
-        int delay = 1000 / FPS; // 1000 ms per second; this delay is in ms
 
         for (Path p : solver) {
             if (animate) {
                 paintPathAnimate(g, p);
-                try {
-                    Thread.sleep(delay);
-                } catch (Exception e) {
-                    //
-                }
+                Thread.sleep(DELAY);
             }
         }
 
+        if (!animate)
+            paintSingularPath(g, solver.getPath());
+    }
+
+    public void paintAStar(Graphics g, ImmutableMaze maze, MazeSolver solver, boolean animate)
+            throws InterruptedException {
         if (!animate) {
+            paintSolver(g, maze, solver, false);
+        } else {
+            paintMaze(g, maze);
+            assert solver instanceof AStar;
+
+            Iterator<Path> iterator = solver.iterator();
+            AStar astar = (AStar) solver;
+            while (iterator.hasNext()) {
+                iterator.next();
+
+                fill(g, astar.getRemoved(), HEAD_COLOR);
+                g.setColor(PATH_COLOR);
+                fillAll(g, astar.getAdded());
+
+                Thread.sleep(DELAY);
+            }
+
+            paintMaze(g, maze);
             paintSingularPath(g, solver.getPath());
         }
     }
@@ -153,6 +177,11 @@ public final class Canvas extends JPanel {
         }
     }
 
+    // EFFECTS: fills all cells in toFill with current color of g
+    private void fillAll(Graphics g, Collection<? extends Position> toFill) {
+        for (Position p : toFill) fill(g, p);
+    }
+
     // EFFECTS: fills cell with specified Position with current color of g
     private void fill(Graphics g, Position pos) {
         g.fillRect(pos.getPosX() * CELL_LENGTH, pos.getPosY() * CELL_LENGTH, CELL_LENGTH, CELL_LENGTH);
@@ -160,7 +189,7 @@ public final class Canvas extends JPanel {
 
     // MODIFIES: g
     // EFFECTS: sets color of g to c, fills cell with specified Position with specified color
-    public void fillColor(Graphics g, Position pos, Color c) {
+    public void fill(Graphics g, Position pos, Color c) {
         g.setColor(c);
         fill(g, pos);
     }

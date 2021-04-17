@@ -24,6 +24,12 @@ public abstract class MazeSolver implements Iterable<Path> {
         this.maze = maze;
     }
 
+    // EFFECTS: resets field variables to solve maze from start
+    protected abstract void init();
+
+    // EFFECTS: produces true if solver is done
+    protected abstract boolean isSolved();
+
     // REQUIRES: Maze has not been fully solved yet (only called if solved produces false)
     // MODIFIES: this
     // EFFECTS: tick the algorithm one step forward and produce the current path
@@ -54,9 +60,6 @@ public abstract class MazeSolver implements Iterable<Path> {
         return moves;
     }
 
-    // EFFECTS: resets field variables to solve maze from start
-    protected abstract void init();
-
     // EFFECTS: produce iterator for this, reset path
     public Iterator<Path> iterator() {
         init();
@@ -67,9 +70,7 @@ public abstract class MazeSolver implements Iterable<Path> {
         // EFFECTS: produce true if maze has not yet been solved
         @Override
         public boolean hasNext() {
-            Position tail = path.getTail();
-            // check if final node in path is in the bottom right corner of the maze
-            return !(tail.getPosX() == maze.getSize() - 2 && tail.getPosY() == maze.getSize() - 2);
+            return !isSolved();
         }
 
         // EFFECTS: produce next path in solving algorithm

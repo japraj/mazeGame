@@ -2,6 +2,7 @@ package ui.graphics;
 
 import model.maze.ImmutableMaze;
 import model.maze.Maze;
+import model.solver.AStar;
 import model.solver.MazeSolver;
 import model.solver.backtracker.Backtracker;
 import ui.controller.MazeGame;
@@ -10,8 +11,6 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 // A Menu that allows the user to configure various aspects of the simulation
 public class ConfigPanel extends JPanel {
@@ -26,10 +25,12 @@ public class ConfigPanel extends JPanel {
     private JButton generateMaze;
     private JButton blankMaze;
     // solvePanel
-    private List<ButtonModel> buttons;
-    private ButtonGroup algorithm;
     private JCheckBox animateSolve;
     private JButton solveMaze;
+    // algoPanel
+    private ButtonGroup algorithm;
+    private JRadioButton backtracker;
+    private JRadioButton astar;
     // miscPanel
     private JButton save;
     private JButton load;
@@ -46,6 +47,8 @@ public class ConfigPanel extends JPanel {
         add(getGenerationPanel(mazeSize));
         add(Box.createVerticalStrut(15));
         add(getSolverPanel());
+        add(Box.createVerticalStrut(15));
+        add(getAlgorithmsPanel());
         add(Box.createVerticalStrut(15));
         add(getMiscPanel());
 
@@ -104,7 +107,7 @@ public class ConfigPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: produces the solver panel and initializes associated variables
     private Component getSolverPanel() {
-        JPanel solverPanel = makePanel("Solve Maze", 150); // add 20 for each button
+        JPanel solverPanel = makePanel("Solve Maze", 90);
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.NONE;
         c.weighty = 0.5;
@@ -126,11 +129,6 @@ public class ConfigPanel extends JPanel {
         animateSolve.setFocusable(false);
         solverPanel.add(animateSolve, c);
 
-        // Algorithm RadioButton Group
-        c.gridy = 2;
-        c.gridwidth = 1;
-        solverPanel.add(getButtonGroup(), c);
-
         return solverPanel;
     }
 
@@ -138,25 +136,14 @@ public class ConfigPanel extends JPanel {
     // EFFECTS: produces a JPanel wrapping the SolverPanel button group & JLabel and initializes associated fields
     private Component getButtonGroup() {
         algorithm = new ButtonGroup();
-        buttons = new ArrayList<>();
 
         JPanel container = new JPanel();
         container.setFocusable(false);
         container.setBackground(MazeGame.BACKGROUND);
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-        JLabel algorithmLabel = makeLabel("Algorithm");
-        container.add(algorithmLabel);
-
-        JSeparator separator = new JSeparator();
-        separator.setFocusable(false);
-        separator.setBackground(MazeGame.BACKGROUND);
-        separator.setForeground(MazeGame.ACCENTS);
-        container.add(separator);
-
-        makeAlgorithmButton(container, "Backtracker", true);
-//        makeAlgorithmButton(container, "Shortest Path", false);
-//        makeAlgorithmButton(container, "A*", false);
+        backtracker = makeAlgorithmButton(container, "Backtracker", true);
+        astar = makeAlgorithmButton(container, "A*", false);
 
         return container;
     }
@@ -164,7 +151,7 @@ public class ConfigPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: adds a RadioButton with specified text to container and to the algorithm ButtonGroup, sets its
     //          foreground/background values to go w/ app theme, and sets its selected attribute as specified
-    private void makeAlgorithmButton(Container c, String text, boolean isSelected) {
+    private JRadioButton makeAlgorithmButton(Container c, String text, boolean isSelected) {
         JRadioButton b = new JRadioButton(text);
         b.setSelected(isSelected);
         b.setBackground(MazeGame.BACKGROUND);
@@ -172,6 +159,25 @@ public class ConfigPanel extends JPanel {
         b.setFocusable(false);
         c.add(b);
         algorithm.add(b);
+        return b;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: produces the algorithms panel and initializes associated variables
+    private Component getAlgorithmsPanel() {
+        JPanel algoPanel = makePanel("Solving Algorithm", 80);
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.NONE;
+        c.weighty = 0.5;
+        c.weightx = 0.5;
+
+        // Algorithm RadioButton Group
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        algoPanel.add(getButtonGroup(), c);
+
+        return algoPanel;
     }
 
     // MODIFIES: this
@@ -268,7 +274,7 @@ public class ConfigPanel extends JPanel {
 
     // EFFECTS: return solver of selected type
     public MazeSolver getSelectedSolver(ImmutableMaze maze) {
-        return new Backtracker(maze);
+        return backtracker.isSelected() ? new Backtracker(maze) : new AStar(maze);
     }
 
     public void setSize(int size) {

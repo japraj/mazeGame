@@ -5,6 +5,8 @@ import model.maze.Maze;
 import model.moveable.Move;
 import model.moveable.Player;
 import model.path.Position;
+import model.solver.AStar;
+import model.solver.MazeSolver;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 import ui.graphics.Canvas;
@@ -148,10 +150,17 @@ public class MazeGame extends JFrame {
     public void solve(boolean animate) {
         blocked = true;
         try {
-            canvas.paintSolver(getTranslatedGraphics(), maze, config.getSelectedSolver(maze), animate);
+            MazeSolver solver = config.getSelectedSolver(maze);
+            if (solver instanceof AStar) {
+                canvas.paintAStar(getTranslatedGraphics(), maze, solver, animate);
+            } else {
+                canvas.paintSolver(getTranslatedGraphics(), maze, solver, animate);
+            }
         } catch (IllegalArgumentException e) {
             // If the player puts the maze in an unsolvable state (by editing walls)
             reset();
+        } catch (InterruptedException e) {
+            // do nothing
         }
     }
 
@@ -199,7 +208,7 @@ public class MazeGame extends JFrame {
                 && !blocked
                 && !player.getPosition().equals(x, y)) {
             maze.setCell(x, y, state == State.PATH);
-            canvas.fillColor(getTranslatedGraphics(),
+            canvas.fill(getTranslatedGraphics(),
                     new Position(x, y),
                     state == State.PATH ? Color.WHITE : Color.BLACK);
         }
