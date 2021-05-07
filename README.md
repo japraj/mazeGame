@@ -4,18 +4,23 @@
 
 ![Image of maze game](https://i.imgur.com/320vQJT.png)
 
+# Video Demo
+
+<a href="https://www.dropbox.com/s/k8k4n2dgoh0zqpm/2021-04-16%2020-48-23.mp4?dl=0">Click here to see a video demo of 
+the main features</a>
+
 ## Features
 
 We operate on square mazes which start at the top left and terminate at the bottom right. The simulator has 4 main
  features:
 - Maze Generation: generate random square mazes of arbitrary size (with some constraints) based on an algorithm from
 Wikipedia
-- Maze Solving: animate the shortest path or first path solution, starting from the top left corner, or the
-user's current position 
+- Maze Solving: animate the shortest path or first path solution (using a backtracking search algo or A* search),
+ starting from the top left corner
 - Editable Canvas: can remove walls with right-click and place them with left-click
-- Controllable Character: the user can control a character to traverse and manually solve the maze, with options to
-spice up the game. The goal is to complete the maze in the shortest possible time
-- Data Persistence: the user can save and load their data
+- Controllable Character: the user can control a character to traverse and manually solve the maze. The goal is to
+ complete the maze in the shortest possible time
+- Data Persistence: the user can save and load their data (stored in JSON)
 
 ## Motivation
 

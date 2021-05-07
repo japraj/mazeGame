@@ -14,7 +14,7 @@ public final class AStar extends MazeSolver {
     // this determines how much we weight the length of our path; smaller values mean that we weight our heuristic
     // more, larger values mean we weight the length of our path more (for when we are selecting the best node to
     // explore)
-    private static final double DISTANCE_BETWEEN_NODES = 0.75;
+    private double DISTANCE_BETWEEN_NODES = 1;
 
     // goal weight is the sum of the x and y of the goal node
     private int goalWeight;
@@ -30,6 +30,12 @@ public final class AStar extends MazeSolver {
     public AStar(ImmutableMaze maze) {
         super(maze);
         goalWeight = (2 * maze.getSize()) - 4;
+    }
+
+    public AStar(ImmutableMaze maze, double weighting) {
+        super(maze);
+        goalWeight = (2 * maze.getSize()) - 4;
+        DISTANCE_BETWEEN_NODES = weighting;
     }
 
     // a guess of how short a path would be if it contained p; uses Manhattan distance
@@ -124,6 +130,11 @@ public final class AStar extends MazeSolver {
         openSet.remove(current);
         for (PathNode neighbour : getNeighbours(current)) {
             double tentativeGScore = gScore.get(current) + DISTANCE_BETWEEN_NODES;
+            // note: of the below if-statements, the first makes the algorithm completely ignore optimizations that
+            // could be made w.r.t. path length (it just finds a path ASAP); the second makes the algorithm take the
+            // time to update its recorded path whenever it finds that there is a shorter path to get to a particular
+            // node.
+//            if (!gScore.keySet().contains(neighbour)) {
             if (tentativeGScore < gScore.getOrDefault(neighbour, Double.MAX_VALUE)) {
                 cameFrom.put(neighbour, current);
                 gScore.put(neighbour, tentativeGScore);
